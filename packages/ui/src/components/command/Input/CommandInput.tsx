@@ -14,7 +14,7 @@ export const CommandInput = React.forwardRef<CommandInputRef, CommandInputProps>
     const inputClassName = React.useMemo(() => inputStyleVariant({searchIcon}), [searchIcon])
     
     return (
-      <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+      <div className="flex items-center border-b" cmdk-input-wrapper="">
         {!!searchIcon && (
           <Search className={inputSearchStyle} />
         )}
