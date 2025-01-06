@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "storage-sync",
   "version": "0.0.1",
   "type": "module",
   "private": true,
@@ -10,12 +10,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.4",
     "@workspace/ui": "workspace:*",
     "lucide-react": "0.456.0",
-    "next-themes": "^0.4.3",
     "next": "^15.1.0",
+    "next-themes": "^0.4.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@types/node": "^20",
