@@ -6,4 +6,7 @@ interface Option {
 export interface ComboboxProps {
     onValueChange(value: string): void
     options: Option[]
+    required?: boolean
+    name: string
+    label: string
 }
