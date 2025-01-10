@@ -20,7 +20,10 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
     }, [onOpenChange])
 
     return (
-        <CollapsiblePrimitive.Root open={open} onOpenChange={handleOpenChange}>
+        <CollapsiblePrimitive.Root
+            open={open} 
+            onOpenChange={handleOpenChange}
+        >
             <div className='flex items-center gap-4 mb-4'>  
                 <CollapsiblePrimitive.Trigger
                     className={cn(

@@ -1,20 +1,27 @@
 /* styles.css */
 .CollapsibleContent {
-	overflow: hidden;
+	overflow: visible;
 }
+
 .CollapsibleContent[data-state="open"] {
-	animation: slideDown 100ms ease-out;
+	animation: slideDown 100ms forwards;
 }
 .CollapsibleContent[data-state="closed"] {
 	animation: slideUp 100ms ease-out;
 }
 
 @keyframes slideDown {
-	from {
+	0% {
 		height: 0;
 	}
-	to {
+
+	50% {
 		height: var(--radix-collapsible-content-height);
+	}
+
+	100% {
+		height: var(--radix-collapsible-content-height);
+		overflow: visible;
 	}
 }
 
