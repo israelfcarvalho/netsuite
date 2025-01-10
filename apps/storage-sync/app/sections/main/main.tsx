@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { Separator } from '@workspace/ui/components'
 
-import { Collapsible, CollapsibleProps, Combobox, Input } from "@workspace/ui/components";
+import { Collapsible, Combobox, Input } from "@workspace/ui/components";
 import { periodOptions, savedSearchOptions } from "./main.mock";
-
-const initialColapseState: CollapsibleProps['initialState'] = 'open'
 
 export const MainSection: React.FC = () => {
     const [name, setName] = useState<string>("");
