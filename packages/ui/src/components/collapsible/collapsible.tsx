@@ -1,6 +1,6 @@
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import { ChevronDown } from 'lucide-react'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { cn } from '@workspace/ui/lib/utils'
 import './collapsible.css'
@@ -12,12 +12,17 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
     initialState = 'closed',
     onOpenChange
 }) => {
-    const [open, setOpen] = React.useState(initialState === 'open' ? true : false)
+    const [open, setOpen] = useState(initialState === 'open')
+    const [nextOpen, setNextOpen] = useState(!(initialState === 'open'))
     
     const handleOpenChange = useCallback((open: boolean) => {
         setOpen(open)
         onOpenChange?.(open)
     }, [onOpenChange])
+
+    const handleConlapseContentEnd = () => {
+        setNextOpen(!open)
+    }
 
     return (
         <CollapsiblePrimitive.Root
@@ -38,8 +43,12 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
                 <h2>{title}</h2>
             </div>
 
-            <CollapsiblePrimitive.Content 
-                className='CollapsibleContent'
+            <CollapsiblePrimitive.Content
+                onAnimationEnd={handleConlapseContentEnd}
+                className={cn(
+                    'CollapsibleContent',
+                    {'overflow-visible': nextOpen}
+                )}
             >
                 {children}
             </CollapsiblePrimitive.Content>

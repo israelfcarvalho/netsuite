@@ -34,7 +34,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
     }, [open, value, search])
 
     return (
-        <Command className='relative h-auto overflow-visible'>
+        <Command className='relative h-auto overflow-visible bg-inherit'>
             <FormField ref={formFieldRef} name="combobox">
                 <FormLabel
                     className="font-sans text-xs text-input-label font-semibold"
