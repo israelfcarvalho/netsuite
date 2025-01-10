@@ -1,25 +1,26 @@
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import { ChevronDown } from 'lucide-react'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import { cn } from '@workspace/ui/lib/utils'
 import './collapsible.css'
-
-export interface CollapsibleProps {
-    children: React.ReactNode,
-    title: string,
-    initialState?: 'open' | 'closed'
-}
+import { CollapsibleProps } from './collapsible.styles'
 
 export const Collapsible: React.FC<CollapsibleProps> = ({
     children, 
     title,
-    initialState = 'closed'
+    initialState = 'closed',
+    onOpenChange
 }) => {
     const [open, setOpen] = React.useState(initialState === 'open' ? true : false)
     
+    const handleOpenChange = useCallback((open: boolean) => {
+        setOpen(open)
+        onOpenChange?.(open)
+    }, [onOpenChange])
+
     return (
-        <CollapsiblePrimitive.Root open={open} onOpenChange={setOpen}>
+        <CollapsiblePrimitive.Root open={open} onOpenChange={handleOpenChange}>
             <div className='flex items-center gap-4 mb-4'>  
                 <CollapsiblePrimitive.Trigger
                     className={cn(
