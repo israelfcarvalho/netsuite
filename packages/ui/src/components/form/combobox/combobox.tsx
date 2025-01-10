@@ -19,7 +19,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState('')
     const [search, setSearch] = React.useState('')
-    const commandInputRef = useRef<React.ElementRef<typeof CommandInput>>(null)
+    const formFieldRef = useRef<React.ElementRef<typeof FormField>>(null)
 
     const cancel = () => {
         setTimeout(() => {
@@ -34,8 +34,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
     }, [open, value, search])
 
     return (
-        <Command className={cn('relative overflow-visible')}>
-            <FormField name="combobox">
+        <Command className='relative h-auto overflow-visible'>
+            <FormField ref={formFieldRef} name="combobox">
                 <FormLabel
                     className="font-sans text-xs text-input-label font-semibold"
                 >
@@ -44,7 +44,6 @@ export const Combobox: React.FC<ComboboxProps> = ({
 
                 <FormControl asChild>
                     <CommandInput
-                        ref={commandInputRef}
                         role='combobox'
                         aria-expanded={open} 
                         onValueChange={(value) => {
@@ -58,7 +57,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                     />
                 </FormControl>
             </FormField>
-            <CommandList className={cn('absolute pt-1 w-full z-10 bg-inherit shadow-lg rounded', !open && 'hidden')} style={{top: commandInputRef.current?.offsetHeight}}>
+            <CommandList className={cn('absolute mt-px w-full z-10 bg-inherit shadow-lg rounded', !open && 'hidden')} style={{top: formFieldRef.current?.offsetHeight}}>
                 <CommandEmpty>No results Found</CommandEmpty>
                 <CommandGroup>
                     {options.map((option) => (
