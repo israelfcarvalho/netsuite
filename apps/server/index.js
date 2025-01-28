@@ -1,15 +1,25 @@
-const path = require('path');
-const fs = require('fs')
-const express = require('express');
+import { join } from 'path';
+import { readFile } from 'fs';
+import express from 'express';
+import cors from 'cors'
+
+import { api } from './api/api.js';
 
 const app = express();
 
 const appPath = '../storage-sync/out'
 
+app.use(cors({
+  origin: ['http://localhost:3000'],
+  methods: ['GET']
+}))
+
 app.use(express.static(appPath))
 
+app.use('/api', api)
+
 app.get('/', (req, res) => {
-  fs.readFile(path.join(appPath, 'index.html'), (err, file) => {
+  readFile(join(appPath, 'index.html'), (err, file) => {
     if (err) {
       res.status(500);
       res.send('Compilando...');
