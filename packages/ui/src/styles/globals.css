@@ -60,8 +60,36 @@
 @layer base {
   * {
     @apply border-border;
+    pointer-events: all !important;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+    ::-webkit-scrollbar-thumb {
+      background-color: #a1a1a1 !important;
+    }
+
+      /* width */
+    ::-webkit-scrollbar {
+      width: 4px !important;
+      height: 6px !important;
+    }
+    
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1 !important;
+      overflow: hidden;
+
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      border-radius: 16px;
+    }
+    
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #919191 !important;
+    }
 }

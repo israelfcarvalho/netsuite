@@ -1,11 +1,12 @@
-import { text } from "stream/consumers"
 import type { Config } from "tailwindcss"
 import tailwindcssAnimate from "tailwindcss-animate"
+import tailwindContainerQuery from '@tailwindcss/container-queries'
 import { fontFamily } from "tailwindcss/defaultTheme"
 
 const config = {
   darkMode: ["class"],
   content: [
+    "providers/**/*.{ts,tsx}",
     "app/**/*.{ts,tsx}",
     "components/**/*.{ts,tsx}",
     "../../packages/ui/src/components/**/*.{ts,tsx}",
@@ -29,7 +30,9 @@ const config = {
             '70': '#aea8a2',
             '80': '#9e9892',
             '90': '#8b8580',
-            '100': '#7a736e'
+            '100': '#7a736e',
+
+            '190': '#161513'
           },
           danger: {
             '120': '#b3311f'
@@ -48,7 +51,7 @@ const config = {
             '120': '#36677d'
           },
           text: {
-            primary: '#161513',
+            primary: '#161513', //light-neutral-190
           }
         },
         border: "hsl(var(--border))",
@@ -101,7 +104,7 @@ const config = {
       }
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate, tailwindContainerQuery],
 } satisfies Config
 
 export default config
