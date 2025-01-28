@@ -1,6 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
+import { ReactQueryProvider } from "@/providers/react-query-provider"
+import { Suspense } from "react"
+import { AlertProvider } from "@workspace/ui/hooks"
+import { SessionProvider } from "@/providers/session-provider"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -22,7 +26,15 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        {children}
+        <Suspense>
+          <AlertProvider>
+            <ReactQueryProvider>
+              <SessionProvider>
+                {children}
+              </SessionProvider>
+            </ReactQueryProvider>
+          </AlertProvider>
+        </Suspense>
       </body>
     </html>
   )

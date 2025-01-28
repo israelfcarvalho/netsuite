@@ -1,4 +1,6 @@
-const buildForNetsuite = true
+const buildForNetsuite = false
+
+console.log('on config', process.env.NODE_ENV)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
