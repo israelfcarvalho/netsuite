@@ -4,14 +4,19 @@ import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import { cn } from "@workspace/ui/lib/utils";
 
 export const Separator: React.FC<SeparatorPrimitive.SeparatorProps> = ({
-    className, ...props
+    className, orientation = 'horizontal', ...props
 }) => {
     return (
         <SeparatorPrimitive.Root
             className={cn(
-                'my-2 bg-light-neutral-50 data-[orientation=horizontal]:h-px', 
+                'bg-light-neutral-40' , 
+                {
+                    'h-px my-4 w-full': orientation === 'horizontal',
+                    'w-px mx-4 h-full': orientation === 'vertical'
+                },
                 className
-            )} 
+            )}
+            orientation={orientation}
             {...props}
         />
     )

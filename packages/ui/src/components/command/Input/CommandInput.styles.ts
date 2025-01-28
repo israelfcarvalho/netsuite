@@ -6,7 +6,7 @@ const className = 'border-input-border border min-h-8'
 const inputStyleVariant = tv({
     base: cn(
         className,
-        "flex min-h-8 w-full rounded-md bg-transparent py-0 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        "flex min-h-8 w-full rounded-md py-0 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
     ),
     variants: {
         searchIcon: {

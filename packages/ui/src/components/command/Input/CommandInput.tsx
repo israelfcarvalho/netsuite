@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react"
+import React, { useEffect } from "react"
 import { CommandInput as CommandInputPrimitive } from "cmdk"
 import { Search } from "lucide-react"
 
@@ -12,7 +12,7 @@ export const CommandInput = React.forwardRef<CommandInputRef, CommandInputProps>
     const {inputSearchStyle, inputStyleVariant} = CommandInputStyles
     
     const inputClassName = React.useMemo(() => inputStyleVariant({searchIcon}), [searchIcon])
-    
+  
     return (
       <div className="flex items-center border-b" cmdk-input-wrapper="">
         {!!searchIcon && (

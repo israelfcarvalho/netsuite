@@ -1,2 +1,2 @@
-export { Combobox } from './combobox'
-export type { ComboboxProps } from './combobox.types'
+export { ComboboxFactory } from './combobox'
+export type { ComboboxOption } from './combobox.types'

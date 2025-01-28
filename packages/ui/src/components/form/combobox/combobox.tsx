@@ -1,31 +1,59 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
-import { Command, CommandItem } from '../../command/command'
-import { CommandInput } from '../../command/index'
-import { CommandEmpty, CommandGroup, CommandList } from 'cmdk'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Check } from 'lucide-react'
-import { cn } from '@workspace/ui/lib/utils'
-import { ComboboxProps } from './combobox.types'
 import { FormControl, FormField, FormLabel } from '@radix-ui/react-form'
+import { Search } from 'js-search'
+import { FixedSizeList as List } from 'react-window'
 
-export const Combobox: React.FC<ComboboxProps> = ({
-    options, 
-    onValueChange, 
+import { cn } from '@workspace/ui/lib/utils'
+import { ComboboxFactoryInterface } from './combobox.types'
+import { ScrollableArea } from '../../scrollable-area'
+import { CommandInput } from '../../command'
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '../../command/command'
+
+export const ComboboxFactory: ComboboxFactoryInterface = () => ({
+    options: incomingOptions, 
     required,
     name,
-    label
+    label,
+    onSelect,
+    optionSelected
 }) => {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState('')
     const [search, setSearch] = React.useState('')
     const formFieldRef = useRef<React.ElementRef<typeof FormField>>(null)
 
-    const cancel = () => {
-        setTimeout(() => {
-            setOpen(false)
-        }, 100);
-    }
+    const searchEngine = useMemo(() => {
+        const searchEngine = new Search(name)
+        searchEngine.addIndex('label')
+
+        return searchEngine
+    }, [name])
+
+    const options = useMemo<typeof incomingOptions>(() => {
+      if(search){
+        const optionsProspect = searchEngine.search(search) as typeof incomingOptions
+        return optionsProspect
+      }
+    
+      const blankOption = {id: `${label}-${name}-blank`, label: 'blank', value: 'blank'} as (typeof incomingOptions)[0] 
+    
+      return [blankOption, ...incomingOptions]
+    }, [incomingOptions, search, required])
+
+    useEffect(() => {
+      if(!!incomingOptions.length){
+        searchEngine.addDocuments(incomingOptions)
+      }
+    }, [incomingOptions])
+
+    useEffect(() => {
+        if(optionSelected){
+            setValue(optionSelected.value)
+        }
+    }, [optionSelected])
 
     useEffect(() => {
         if(!open && value && value !== search){
@@ -33,9 +61,15 @@ export const Combobox: React.FC<ComboboxProps> = ({
         }
     }, [open, value, search])
 
+    const cancel = () => {
+        setTimeout(() => {
+            setOpen(false)
+        }, 100);
+    }
+
     return (
-        <Command className='relative h-auto overflow-visible bg-inherit'>
-            <FormField ref={formFieldRef} name="combobox">
+        <Command shouldFilter={false} className='relative h-auto overflow-visible bg-inherit'>
+            <FormField ref={formFieldRef} name={name}>
                 <FormLabel
                     className="font-sans text-xs text-input-label font-semibold"
                 >
@@ -44,12 +78,12 @@ export const Combobox: React.FC<ComboboxProps> = ({
 
                 <FormControl asChild>
                     <CommandInput
+                        className='bg-light-neutral'
                         role='combobox'
                         aria-expanded={open} 
                         onValueChange={(value) => {
                             setSearch(value)
                             setOpen(true)
-                            onValueChange(value)
                         }}
                         onFocus={() => setOpen(true)}
                         onBlur={cancel}
@@ -57,34 +91,75 @@ export const Combobox: React.FC<ComboboxProps> = ({
                     />
                 </FormControl>
             </FormField>
-            <CommandList className={cn('absolute mt-px w-full z-10 bg-inherit shadow-lg rounded', !open && 'hidden')} style={{top: formFieldRef.current?.offsetHeight}}>
-                <CommandEmpty>No results Found</CommandEmpty>
-                <CommandGroup>
-                    {options.map((option) => (
-                        <CommandItem
-                            className={cn(
-                                'flex justify-between',
-                            )}
-                            key={option.value} 
-                            value={option.value} 
-                            onSelect={(value) => {
-                                setValue(value)
-                                setSearch(value)
-                                setOpen(false)
-                            }}
-                            
+            <ScrollableArea 
+                className={cn(
+                    '!absolute max-h-56 mt-px w-full z-10 shadow-[0px_10px_20px_0px] shadow-light-neutral-60 rounded-b-md',
+                    !open && 'hidden'
+                )}
+                style={{top: formFieldRef.current?.offsetHeight}}
+            >
+                <CommandList>
+                    <CommandEmpty>
+                        {!!options.length ? 'No results Found' : 'No options available'}
+                    </CommandEmpty>
+                    <CommandGroup>
+                        <List
+                            height={options.length > 6 ? 192 : options.length * 32}
+                            itemCount={options.length}
+                            itemSize={32}
+                            width='100%'
                         >
-                            {option.label}
-                            <Check
-                                className={cn(
-                                    "h-4 w-4",
-                                    value === option.value ? "opacity-100" : "opacity-0"
-                                )}
-                            />
-                        </CommandItem>
-                    ))}
-                </CommandGroup>
-            </CommandList>
+                            {({style, index}) => {
+                                const option = options[index]
+                                if(!option) return null
+
+                                if(option.value === 'blank'){
+                                    return (
+                                    <CommandItem
+                                        className={cn(
+                                            'flex justify-between w-full h-8',
+                                        )}
+                                        key='blank' 
+                                        value='blank' 
+                                        onSelect={() => {
+                                            onSelect(undefined)
+                                            setValue('')
+                                            setSearch('')
+                                            setOpen(false)
+                                        }}
+                                    />
+                                    )
+                                }
+                                    
+                                return (
+                                    <CommandItem
+                                        className={cn(
+                                            'flex justify-between',
+                                        )}
+                                        key={option.id} 
+                                        value={option.value} 
+                                        onSelect={() => {
+                                            onSelect(option)
+                                            setValue(option.value)
+                                            setSearch(option.label)
+                                            setOpen(false)
+                                        }}
+                                        style={style}
+                                    >
+                                        {option.label}
+                                        <Check
+                                            className={cn(
+                                                "h-4 w-4",
+                                                value === option.value ? "opacity-100" : "opacity-0"
+                                            )}
+                                        />
+                                    </CommandItem>
+                                )
+                            }}
+                        </List>
+                    </CommandGroup>
+                </CommandList>
+            </ScrollableArea>
         </Command>
     ) 
 }

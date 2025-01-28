@@ -1,6 +1,8 @@
+'use client'
+
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import { ChevronDown } from 'lucide-react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { cn } from '@workspace/ui/lib/utils'
 import './collapsible.css'
@@ -40,14 +42,14 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
                     <ChevronDown />
                 </CollapsiblePrimitive.Trigger>
 
-                <h2>{title}</h2>
+                <h2 className='font-semibold'>{title}</h2>
             </div>
 
             <CollapsiblePrimitive.Content
                 onAnimationEnd={handleConlapseContentEnd}
                 className={cn(
                     'CollapsibleContent',
-                    {'overflow-visible': nextOpen}
+                    {'!overflow-visible': !nextOpen && open}
                 )}
             >
                 {children}
