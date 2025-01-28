@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect, useMemo, useCallback, RefCallback} from "react";
+import React, { useState, useRef, useEffect, useMemo} from "react";
 import {
   CheckIcon,
   ChevronDown,
