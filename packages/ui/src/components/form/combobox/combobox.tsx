@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useMemo, useRef } from 'react'
-import { Check } from 'lucide-react'
+import { Check, ChevronDown } from 'lucide-react'
 import { FormControl, FormField, FormLabel } from '@radix-ui/react-form'
 import { Search } from 'js-search'
 import { FixedSizeList as List } from 'react-window'
@@ -24,6 +24,7 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     const [value, setValue] = React.useState('')
     const [search, setSearch] = React.useState('')
     const formFieldRef = useRef<React.ElementRef<typeof FormField>>(null)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const searchEngine = useMemo(() => {
         const searchEngine = new Search(name)
@@ -76,20 +77,25 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                     {label} {required && <span className="ml-[2px] text-light-danger-120 text-base">*</span>}
                 </FormLabel>
 
-                <FormControl asChild>
-                    <CommandInput
-                        className='bg-light-neutral'
-                        role='combobox'
-                        aria-expanded={open} 
-                        onValueChange={(value) => {
-                            setSearch(value)
-                            setOpen(true)
-                        }}
-                        onFocus={() => setOpen(true)}
-                        onBlur={cancel}
-                        value={search}
-                    />
-                </FormControl>
+                <div className='w-full relative'>
+                    <FormControl asChild>
+                        <CommandInput
+                            ref={inputRef}
+                            className='bg-light-neutral'
+                            role='combobox'
+                            aria-expanded={open} 
+                            onValueChange={(value) => {
+                                setSearch(value)
+                                setOpen(true)
+                            }}
+                            onFocus={() => setOpen(true)}
+                            onBlur={cancel}
+                            value={search}
+                        />
+                    </FormControl>
+
+                    {!open && (<ChevronDown role='button' aria-label={`open ${label}`} onClick={() => inputRef.current?.focus()} className='absolute size-6 pr-2 top-1 right-0 cursor-pointer'/>)}
+                </div>
             </FormField>
             <ScrollableArea 
                 className={cn(
