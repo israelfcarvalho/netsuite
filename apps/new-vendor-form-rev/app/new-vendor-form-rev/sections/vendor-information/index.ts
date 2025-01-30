@@ -1,0 +1,1 @@
+export { VendorInformation } from './vendor-information'
