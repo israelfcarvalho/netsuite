@@ -100,5 +100,6 @@ export interface SaveSavedSearchSyncSettingsBody {
     createPeriodFolder: boolean,
     notificationSettings: { id: string, name: string },
     storageSettings: { id: string, name: string },
+    dateExecutionSettings?: {id: string}
     scriptDeplymentLink?: string
 };

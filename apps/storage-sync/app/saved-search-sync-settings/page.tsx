@@ -134,7 +134,8 @@ export default function Page() {
         periodDelayInDays: periodDelay,
         savedSearch: {id: savedSearch?.id, name: savedSearch.label},
         scriptDeplymentLink: link,
-        storageSettings: {id: storageSettings.id, name: storageSettings.value}
+        storageSettings: {id: storageSettings.id, name: storageSettings.value},
+        dateExecutionSettings: dateExecutionSettings ? {id: dateExecutionSettings.id} : undefined
       }, {
         onSuccess(){
           router.push(savedSearchSettingsPath)
