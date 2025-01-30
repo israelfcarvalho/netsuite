@@ -2,6 +2,7 @@
 'use client'
 
 import { api } from "@/services";
+import { NetSuiteError, NetSuiteErrorCode } from "@workspace/services/api";
 import { Button, Dialog, DialogClose, DialogContent, DialogPortal, DialogOverlay, DialogTitle, DialogDescription } from "@workspace/ui/components";
 import React, { PropsWithChildren, useState } from "react";
 import { useQuery } from "react-query";
@@ -19,13 +20,18 @@ async function testConnection(){
 const useTestConnection = () => {
     const [isConnected, setIsConnected] = useState(true)
 
-     useQuery({
+     useQuery<TestConnection, NetSuiteError>({
         queryFn: testConnection,
         queryKey: ['netsuite-test-connection'],
         retryDelay: 3000,
-        retry() {
-            setIsConnected(false)
-            return true
+        retry(_, error) {
+            if(error.code === NetSuiteErrorCode.SESSION_TIMED_OUT){
+                setIsConnected(false)
+                return true
+
+            }
+
+            return false
         },
         onSuccess(){
             setIsConnected(true)

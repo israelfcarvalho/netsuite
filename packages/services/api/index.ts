@@ -1,3 +1,4 @@
 export * from './data'
+export * from './error'
+
 export { Api } from './api'
-export type { NetSuiteError } from './api.error'

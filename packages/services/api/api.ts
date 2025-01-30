@@ -1,4 +1,4 @@
-import { NetSuiteError, RawNetsuiteError } from "./api.error";
+import { NetSuiteError, RawNetsuiteError } from "./error";
 
 export type ParamValue = string | boolean | number
 
@@ -82,13 +82,17 @@ export class Api implements Api {
                     return res
                 })
             } else {
-                if(res.headers.get(headersMap["Content-Type"].name) === headersMap["Content-Type"].values["application/json"]){
+                const headerContentTypes = res.headers.get(headersMap["Content-Type"].name) ?? ''
+                const contentTypeAppJson = headersMap["Content-Type"].values["application/json"]
+                const contentTypeIsApplicationJson = headerContentTypes.includes(contentTypeAppJson)
+
+                if(contentTypeIsApplicationJson){
                     res.json().then(reject)
                 } else {
                     const error: RawNetsuiteError = {
                         error: {
                             code: 'unknow',
-                            message: `[${res.status}]`
+                            message: `[${res.status}] uknown reason. Contact Support`
                         }
                     }
 

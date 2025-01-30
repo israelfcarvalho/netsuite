@@ -1,3 +1,7 @@
+export enum NetSuiteErrorCode {
+    SESSION_TIMED_OUT = 'SESSION_TIMED_OUT'
+}
+
 export interface RawNetsuiteError {
     error: INetSuiteError
 }
