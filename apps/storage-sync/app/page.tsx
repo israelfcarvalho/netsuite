@@ -279,7 +279,8 @@ const SavedSearchSyncSettingsListPage: React.FC = () => {
     const { 
         savedSearchSyncSettingsData, 
         savedSearchSyncSettingsSummary,
-        pageSize
+        pageSize,
+        isLoading
     } = useSavedSearchSyncSettingsList(page)
 
     const addNew = () => {
@@ -294,6 +295,7 @@ const SavedSearchSyncSettingsListPage: React.FC = () => {
                 title="SM | Saved Search Sync Settings List"
             >
                 <Table
+                    loading={isLoading}
                     pageSize={pageSize}
                     data={savedSearchSyncSettingsData}
                     hasNext={!!savedSearchSyncSettingsSummary && !savedSearchSyncSettingsSummary.page.isLast}

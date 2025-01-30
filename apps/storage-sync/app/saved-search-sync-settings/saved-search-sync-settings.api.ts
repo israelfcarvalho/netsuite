@@ -20,7 +20,8 @@ export const useSavedSearchSyncSettingsList = (page: number) => {
         data: {
             data = [],
             summary
-        } = {} 
+        } = {},
+        isLoading
     } = useQuery({
         queryKey: [`saved-search-sync-settings-list-${page}`],
         queryFn: () => getSavedSearchSyncSettings(page),
@@ -29,7 +30,8 @@ export const useSavedSearchSyncSettingsList = (page: number) => {
     return {
         savedSearchSyncSettingsData: data,
         savedSearchSyncSettingsSummary: summary,
-        pageSize
+        pageSize,
+        isLoading
     }
 }
 

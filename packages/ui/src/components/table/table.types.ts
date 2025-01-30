@@ -8,6 +8,7 @@ interface TableProps<T> {
     hasPrevious: boolean
     onClickNext: VoidFunction
     onClickPrevious: VoidFunction
+    loading?: boolean
 }
 
 type Keyof<T> = T extends Record<infer K, any> ? K extends string ? K : string : string

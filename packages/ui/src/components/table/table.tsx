@@ -17,6 +17,7 @@ import {
 import * as TablePrimitives from "./components"
 import { Button } from "../button"
 import { TableFactoryInterface } from "./table.types"
+import { Skeleton } from "../skeleton"
 
 const getCommonPinningStyles = (column: Column<any>, isOverflowed: boolean): React.CSSProperties => {
   if(!isOverflowed){
@@ -50,7 +51,8 @@ export const tableFactory: TableFactoryInterface = (columns, columnPinning = {le
     hasPrevious,
     onClickNext,
     onClickPrevious,
-    pageSize
+    pageSize,
+    loading
 }) => {
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -157,12 +159,20 @@ export const tableFactory: TableFactoryInterface = (columns, columnPinning = {le
                 ))
               ) : (
                 <TablePrimitives.TableRow>
-                  <TablePrimitives.TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TablePrimitives.TableCell>
+                  {loading ? (
+                    <TablePrimitives.TableCell
+                      colSpan={columns.length}
+                    >
+                      <Skeleton className="h-96"/>
+                    </TablePrimitives.TableCell>
+                  ) : (
+                    <TablePrimitives.TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TablePrimitives.TableCell>
+                  )}
                 </TablePrimitives.TableRow>
               )}
             </TablePrimitives.TableBody>
