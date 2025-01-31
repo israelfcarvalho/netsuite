@@ -1,8 +1,8 @@
 'use client'
 
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
-import { Collapsible, ComboboxFactory, ComboboxOption, Input, Separator } from "@workspace/ui/components";
+import { Checkbox, Collapsible, ComboboxFactory, ComboboxOption, Input, Separator } from "@workspace/ui/components";
 import { useAccountTypeOptions, useWireOrAchOptions } from "./bank-information.api";
 
 const Combobox = ComboboxFactory()
@@ -55,11 +55,17 @@ export const BankInformation: React.FC<BankInformationProps> = ({
     const { accountTypeOptions } = useAccountTypeOptions()
     const { wireOrAchOptions } = useWireOrAchOptions()
 
+    const [yes, setYes] = useState<ComboboxOption>()
+    const [a, seta] = useState('')
+    const [b, setb] = useState('')
+    const [c, setc] = useState('')
+
+
 
     return (
       <Collapsible title="Bank Information" initialState="open">
-          <div className="w-full grid grid-cols-[repeat(3,minmax(0,300px))] grid-rows gap-x-16">
-            <Input 
+          <div className="w-full grid gap-y-2 gap-x-16 grid-cols-[repeat(3,minmax(0,1fr))] 2xl:gap-x-32">
+            <Input
               required
               name="bank-name"
               label="Bank Name"
@@ -109,12 +115,8 @@ export const BankInformation: React.FC<BankInformationProps> = ({
               onChange={setSwiftOrIban}
             />
 
-            <div className="col-span-3 flex flex-nowrap items-center pt-4">
-              <Separator className="flex-initial"/>
-
-              <h3 className="font-bold text-light-neutral-100 flex-[1_0_fit-content] px-3">Address</h3>
-
-              <Separator className="flex-initial"/>
+            <div className="col-span-3 flex flex-nowrap pt-8">
+              <h3 className="font-bold text-light-neutral-100 flex-[0_1_fit-content]">Address</h3>
             </div>
 
             <Input 
@@ -148,6 +150,59 @@ export const BankInformation: React.FC<BankInformationProps> = ({
               value={zipcode}
               onChange={setZipcode}
             />
+
+
+            <div className="col-span-3 flex flex-nowrap pt-8">
+              <p className="font-semibold text-light-neutral-100 flex-[0_1_fit-content] max-w-[1024px]">
+                Does this agreement involve certain payments or transfers of value to Healthcare Professionals (HCPs) or
+                Teaching Hospitals, which may trigger reporting requirements under the US Federal or International
+                transparency reporting requirements?
+              </p>
+            </div>
+
+            <div className="col-span-3 flex flex-nowrap pt-8">
+              <div>
+                <Combobox
+                  label="Yes"
+                  name="yes"
+                  options={[{id: 'yes', label: 'Yes', value: 'Yes'}, {id: 'n-a', label: 'N/A', value: 'N/A'}]}
+                  onSelect={setYes}
+                  optionSelected={yes}
+                />
+              </div>
+            </div>
+
+            {yes?.id === 'yes' && (
+               <>
+                <p className="col-span-3 flex flex-nowrap pt-2 font-semibold text-light-neutral-100">
+                  Please complete the following as applicable:
+                </p>
+
+                <Input 
+                  required
+                  name="HCP NPI Number or Ex-US Identifier: "
+                  label="HCP NPI Number or Ex-US Identifier: "
+                  value={a}
+                  onChange={seta}
+                />
+
+                <Input 
+                  required
+                  name="HCP State License Number:"
+                  label="HCP State License Number:"
+                  value={b}
+                  onChange={setb}
+                />
+
+                <Input 
+                  required
+                  name="Teaching Hospital TIN:"
+                  label="Teaching Hospital TIN:"
+                  value={c}
+                  onChange={setc}
+                />
+               </>
+            )}
           </div>
       </Collapsible>
     )
