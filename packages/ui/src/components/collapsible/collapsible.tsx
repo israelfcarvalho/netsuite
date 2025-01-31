@@ -28,10 +28,11 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
 
     return (
         <CollapsiblePrimitive.Root
+            className='bg-light-neutral-20 shadow-[0_0_4px_1px] shadow-light-neutral-60 p-4 rounded-md'
             open={open} 
             onOpenChange={handleOpenChange}
         >
-            <div className='flex items-center gap-4 mb-4'>  
+            <div className={cn('flex items-center gap-4 mb-4', {'mb-0': !open})}>
                 <CollapsiblePrimitive.Trigger
                     className={cn(
                         'transition-all',
