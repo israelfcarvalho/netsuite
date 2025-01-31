@@ -1,0 +1,1 @@
+export { DropZoneFile } from './file'
