@@ -1,12 +1,15 @@
 'use client'
 
-import { ComboboxOption, Form, Separator } from "@workspace/ui/components"
+import { Button, ComboboxOption, Form, Input, Separator, tableFactory, Tabs } from "@workspace/ui/components"
 import { VendorInformation, BankInformation } from "./sections"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
-import { useSavedSearchSyncSettings, useSaveSavedSearchSyncSettings } from "./new-vendor-form-rev.api"
+import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from "react"
+import { useSavedSearchSyncSettings } from "./new-vendor-form-rev.api"
 import { environments } from "@/environments"
 import { useAlert } from "@workspace/ui/hooks"
+import { NetsuiteFieldOption } from "@workspace/services/api"
+import { Trash2 } from "lucide-react"
+import { DropZoneFile } from "@workspace/ui/components/drag-and-drop/file/file"
 
 const { netsuite_path, isProduction } = environments
 const localPath = '/'
@@ -15,7 +18,7 @@ const savedSearchSettingsPath = isProduction ? netsuite_path : localPath
 
 export default function Page() {
   const { alert } = useAlert()
-  const { mutate } = useSaveSavedSearchSyncSettings()
+  const {data, setData} = useContext(tableContext) 
 
   const router = useRouter()
   const params = useSearchParams()
@@ -134,7 +137,7 @@ export default function Page() {
             setRemittanceZipcode={setRemittanceZipcode}
           />
 
-          <Separator className="my-8" orientation="horizontal"/>
+          <Separator className="my-3 bg-transparent" orientation="horizontal"/>
 
           <BankInformation 
             name={bankName}
@@ -158,7 +161,249 @@ export default function Page() {
             zipcode={bankZipcode}
             setZipcode={setBankZipcode}
           />
+
+        <Separator className="my-3 bg-transparent" orientation="horizontal"/>
+
+          <Tabs
+            tabs={[
+              {
+                id: 'notes',
+                label: 'Notes',
+                content: (
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      className="w-fit"
+                      onClick={() => setData(old => [...old, {id: id()}])}
+                    >
+                      New Note
+                    </Button>
+                    <Table 
+                      data={data}
+                      pageSize={1000}
+                    />
+                  </div>
+                )
+              },
+              {
+                id: 'files',
+                label: 'Files',
+                content: (
+                  <DropZoneFile/>
+                )
+              }
+            ]}
+          />
+
+
         </Form>
     </div>
+  )
+}
+
+
+//#region Table
+interface Table {
+  id: string
+  title?: string
+  memo?: string
+  date?: string
+  time?: string
+  type?: NetsuiteFieldOption
+  direction?: NetsuiteFieldOption
+}
+
+let _id = 0
+
+const id = () => {
+  return (_id++).toString()
+}
+
+const tableData: Table[] = [
+  ...Array.from({length: 3}, (_, index) => ({id: id(), title: `title ${index}`, memo: `memo ${index}`, date: `date ${index}`, time: `time ${index}`, type: {id: '1', name: 'test'}, direction: {id: '1', name: 'test'}})),
+]
+
+const Table = tableFactory<Table, ''>([
+  {
+    accessorKey: "title",
+    header: ({column}) => {
+        return (
+            <div
+                className="px-4 py-2 rounded-none w-full justify-start text-xs"
+                style={{width: column.getSize()}}
+            >
+              Title
+            </div>
+        )
+    },
+    cell: ({ row }) => {
+      const [title, setTitle] = useState(row.getValue<Table['title']>('title'))
+
+      return (
+        <div className="px-[1px]">
+          <Input
+            variant="outline" 
+            label="Title"
+            name="title"
+            labeless
+            value={title}
+            onChange={setTitle}
+          />
+        </div>
+      )
+    },
+    size: 60
+  },
+  {
+    accessorKey: "memo",
+    header: ({column}) => {
+        return (
+            <div
+                className="px-4 py-2 rounded-none w-full justify-start text-xs"
+                style={{width: column.getSize()}}
+            >
+              Memo
+            </div>
+        )
+    },
+    cell: ({ row }) => {
+      const [memo, setMemo] = useState(row.getValue<Table['memo']>('memo'))
+
+      return (
+        <div className="px-[1px]">
+          <Input
+            variant="outline" 
+            label="Memo"
+            name="Memo"
+            labeless
+            value={memo}
+            onChange={setMemo}
+          />
+        </div>
+      )
+    }
+  },
+  {
+    accessorKey: "date",
+    header: ({column}) => {
+        return (
+            <div
+                className="px-4 py-2 rounded-none w-full justify-start text-xs"
+                style={{width: column.getSize()}}
+            >
+              Date
+            </div>
+        )
+    },
+    cell: ({ row }) => {
+      const [date, setDate] = useState(row.getValue<Table['date']>('date'))
+
+      return (
+        <div className="px-[1px]">
+          <Input
+            variant="outline" 
+            label="Date"
+            name="Date"
+            labeless
+            value={date}
+            onChange={setDate}
+          />
+        </div>
+      )
+    }
+  },
+  {
+    accessorKey: "time",
+    header: ({column}) => {
+        return (
+            <div
+                className="px-4 py-2 rounded-none w-full justify-start text-xs"
+                style={{width: column.getSize()}}
+            >
+              Time
+            </div>
+        )
+    },
+    cell: ({ row }) => {
+      const [time, setTime] = useState(row.getValue<Table['time']>('time'))
+
+      return (
+        <div className="px-[1px]">
+          <Input
+            variant="outline" 
+            label="Time"
+            name="Time"
+            labeless
+            value={time}
+            onChange={setTime}
+          />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "action",
+    header: ({column}) => {
+
+        return (
+            <div
+                className="px-4 py-2 rounded-none w-full justify-start text-xs"
+                style={{width: column.getSize()}}
+            >
+              
+            </div>
+        )
+    },
+    cell: ({ row }) => {
+      const {setData} = useContext(tableContext)
+
+      const onRemove = () => {
+        console.log(row.getValue('id'))
+
+        setData(old => old.filter((data) => data.id !== row.getValue('id')))
+      }
+
+      return (
+        <div className="px-[1px]">
+          <Button onClick={onRemove} variant="ghost">
+            <Trash2 className="size-4"/>
+          </Button>
+        </div>
+      )
+    },
+    size: 60
+  },
+  {
+    accessorKey: "id",
+    header: ({column}) => {
+
+        return (
+            <div
+                className="px-4 py-2 rounded-none w-full justify-start text-xs hidden"
+                style={{width: column.getSize()}}
+            >
+              
+            </div>
+        )
+    },
+    cell: ({ row }) => null,
+  },
+  
+])
+//#endregion Table
+
+interface Data {
+  data: Table[]
+  setData: Dispatch<SetStateAction<Table[]>>
+}
+
+const tableContext = createContext<Data>({} as any)
+
+export const Provider = ({children}: PropsWithChildren) => {
+  const [data, setData] = useState(tableData)
+
+  return (
+    <tableContext.Provider value={{data, setData}}>
+      {children}
+    </tableContext.Provider>
   )
 }

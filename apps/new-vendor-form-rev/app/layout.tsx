@@ -5,6 +5,7 @@ import { ReactQueryProvider } from "@/providers/react-query-provider"
 import { Suspense } from "react"
 import { AlertProvider } from "@workspace/ui/hooks"
 import { SessionProvider } from "@/providers/session-provider"
+import { Provider } from "./new-vendor-form-rev/page"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -30,7 +31,9 @@ export default function RootLayout({
           <AlertProvider>
             <ReactQueryProvider>
               <SessionProvider>
-                {children}
+                <Provider>
+                  {children}
+                </Provider>
               </SessionProvider>
             </ReactQueryProvider>
           </AlertProvider>
