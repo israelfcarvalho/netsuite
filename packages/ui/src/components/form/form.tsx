@@ -8,7 +8,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "../button/button";
 import { ScrollableArea } from "../scrollable-area";
 
-const headerAndContentSyncSpaceClassName = '@lg:px-6 px-4'
+const headerAndContentSyncSpaceClassName = '@lg:px-12 px-4'
 
 export const Form: React.FC<FormProps> = ({ 
     children,
@@ -27,13 +27,13 @@ export const Form: React.FC<FormProps> = ({
     }, [onSubmit])
 
     return (
-        <FormPrimitive 
-            className="flex flex-col w-full h-full bg-light-neutral-00" 
+        <FormPrimitive
+            className="@container flex flex-col w-full h-full bg-light-neutral-00" 
             onSubmit={handleSubmit}
         >
             <div className={cn(
                 headerAndContentSyncSpaceClassName,
-                "py-4 bg-light-neutral-30"
+                "py-4 bg-light-neutral-30 shadow-lg z-10"
             )}>
                 {!!title && <h2 className="text-xl font-bold">{title}</h2>}
 
