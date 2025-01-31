@@ -68,7 +68,7 @@ export const VendorInformation: React.FC<VendorInformationProps> = ({
 
     return (
       <Collapsible title="Vendor Information" initialState="open">
-          <div className="w-full grid grid-cols-[repeat(3,minmax(0,300px))] grid-rows gap-x-16">
+          <div className="w-full grid gap-y-2 gap-x-16 grid-cols-[repeat(3,minmax(0,1fr))] 2xl:gap-x-32">
             <Input 
               required
               name="vendor-name"
@@ -93,12 +93,8 @@ export const VendorInformation: React.FC<VendorInformationProps> = ({
               onChange={setPhone}
             />
 
-            <div className="col-span-3 flex flex-nowrap items-center pt-4">
-              <Separator className="flex-initial"/>
-
-              <h3 className="font-bold text-light-neutral-100 flex-[1_0_fit-content] px-3">Business Address</h3>
-
-              <Separator className="flex-initial"/>
+            <div className="col-span-3 flex flex-nowrap pt-8">
+              <h3 className="font-bold text-light-neutral-100 flex-[0_1_fit-content]">Business Address</h3>
             </div>
 
             <Input 
@@ -142,12 +138,8 @@ export const VendorInformation: React.FC<VendorInformationProps> = ({
               onChange={setBusinessZipcode}
             />
 
-            <div className="col-span-3 flex flex-nowrap items-center pt-4">
-              <Separator className="flex-initial"/>
-
-              <h3 className="font-bold text-light-neutral-100 flex-[1_0_fit-content] px-3">Remittance Address</h3>
-
-              <Separator className="flex-initial"/>
+            <div className="col-span-3 flex flex-nowrap pt-8">
+              <h3 className="font-bold text-light-neutral-100 flex-[0_1_fit-content]">Remittance Address</h3>
             </div>
 
             <Input 
