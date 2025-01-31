@@ -76,6 +76,9 @@ export const tableFactory: TableFactoryInterface = (columns, columnPinning = {le
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    getRowId(originalRow, index, parent) {
+      return originalRow?.id ?? index.toString()
+    },
     state: {
       sorting,
       columnFilters,
@@ -113,33 +116,33 @@ export const tableFactory: TableFactoryInterface = (columns, columnPinning = {le
           <TablePrimitives.Table className="w-full">
             <TablePrimitives.TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
-                  <TablePrimitives.TableRow
-                      className="p-none"
-                      key={headerGroup.id}
-                  >
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <TablePrimitives.TableHead
-                              key={header.id}
-                              style={getCommonPinningStyles(header.column, isOverflowed)}
-                              className="bg-light-neutral-10"
-                          >
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </TablePrimitives.TableHead>
-                        )
-                      })}
-                </TablePrimitives.TableRow>
+                <TablePrimitives.TableRow
+                    className="p-none"
+                    key={headerGroup.id}
+                >
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TablePrimitives.TableHead
+                            key={header.id}
+                            style={getCommonPinningStyles(header.column, isOverflowed)}
+                            className="bg-light-neutral-10"
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </TablePrimitives.TableHead>
+                      )
+                    })}
+              </TablePrimitives.TableRow>
               ))}
             </TablePrimitives.TableHeader>
             <TablePrimitives.TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TablePrimitives.TableRow
+                <TablePrimitives.TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                   >
@@ -178,25 +181,27 @@ export const tableFactory: TableFactoryInterface = (columns, columnPinning = {le
             </TablePrimitives.TableBody>
           </TablePrimitives.Table>
         </div>
-        <div className="flex items-center justify-start space-x-2 py-4">
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onClickPrevious}
-              disabled={!hasPrevious}
-            >
-              Previous
-            </Button>
-            <Button
-              size="sm"
-              onClick={onClickNext}
-              disabled={!hasNext}
-            >
-              Next
-            </Button>
+        {(hasNext !== undefined && hasPrevious !== undefined) && (
+          <div className="flex items-center justify-start space-x-2 py-4">
+            <div className="space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onClickPrevious}
+                disabled={!hasPrevious}
+              >
+                Previous
+              </Button>
+              <Button
+                size="sm"
+                onClick={onClickNext}
+                disabled={!hasNext}
+              >
+                Next
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
   )
 }

@@ -2,12 +2,13 @@ import { ColumnDef, ColumnPinningState as ColumnPinningStatePrimitive } from "@t
 import React from "react";
 
 interface TableProps<T> {
+    editRow?: boolean
     pageSize: number
     data: T[]
-    hasNext: boolean,
-    hasPrevious: boolean
-    onClickNext: VoidFunction
-    onClickPrevious: VoidFunction
+    hasNext?: boolean,
+    hasPrevious?: boolean
+    onClickNext?: VoidFunction
+    onClickPrevious?: VoidFunction
     loading?: boolean
 }
 
