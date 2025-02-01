@@ -10,11 +10,9 @@ import { useAlert } from "@workspace/ui/hooks"
 import { NetsuiteFieldOption } from "@workspace/services/api"
 import { Trash2 } from "lucide-react"
 import { DropZoneFile } from "@workspace/ui/components/drag-and-drop/file/file"
+import { Logo } from "@/components/logo"
 
-const { netsuite_path, isProduction } = environments
-const localPath = '/'
-
-const savedSearchSettingsPath = isProduction ? netsuite_path : localPath
+const { path_home } = environments
 
 export default function Page() {
   const { alert } = useAlert()
@@ -96,7 +94,7 @@ export default function Page() {
   }
 
   const handleCancel = () => {
-    router.push(savedSearchSettingsPath)
+    router.push(path_home)
   }
 
   return (
@@ -107,6 +105,7 @@ export default function Page() {
           onCancel={handleCancel}
           onReset={savedSearchSyncSettingsData ?  () => setInitialData() : undefined}
           contentClassname="pr-7"
+          logo={<Logo />}
         >
           <VendorInformation 
             name={vendorName}
@@ -138,6 +137,7 @@ export default function Page() {
           />
 
           <Separator className="my-3 bg-transparent" orientation="horizontal"/>
+
 
           <BankInformation 
             name={bankName}

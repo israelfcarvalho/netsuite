@@ -9,10 +9,10 @@ import { useSavedSearchSyncSettingsList } from "./new-vendor-form-rev/new-vendor
 import { environments } from "@/environments";
 import { SavedSearchSyncSettings } from "./new-vendor-form-rev/new-vendor-form-rev-type";
 
-const {isProduction, netsuite_path} = environments
+const {isProduction} = environments
 const localPath = '/saved-search-sync-settings?a=b'
 
-const savedSearchSettingsPath = isProduction ? netsuite_path : localPath
+const savedSearchSettingsPath = ''
 
 const Table = tableFactory<SavedSearchSyncSettings, 'edit'>([
     {

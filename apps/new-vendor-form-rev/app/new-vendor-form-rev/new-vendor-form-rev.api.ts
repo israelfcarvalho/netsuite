@@ -9,7 +9,8 @@ import { GetSavedSearchSyncSettingsResponse, ResponseGetSavedSearchSyncSettingsB
 const pageSize = 1000
 
 function getSavedSearchSyncSettings(page: number){
-    return api.get<GetSavedSearchSyncSettingsResponse>(`${environments.api_saved_search_sync_settings}`, {
+    return api.get<GetSavedSearchSyncSettingsResponse>(`
+        `, {
         pageIndex: page,
         pageSize: pageSize
     })
@@ -40,7 +41,7 @@ async function getSavedSearchSyncSettingsById(id: string | null){
         return
     }
 
-    return api.get<ResponseGetSavedSearchSyncSettingsById>(environments.api_saved_search_sync_settings, {
+    return api.get<ResponseGetSavedSearchSyncSettingsById>('', {
         action: 'by-id',
         id
     })
@@ -59,7 +60,7 @@ export const useSavedSearchSyncSettings = (id: string | null) => {
 
 async function saveSavedSearchSyncSettings(body: SaveSavedSearchSyncSettingsBody){
     return api.post<ResponseGetSavedSearchSyncSettingsById, SaveSavedSearchSyncSettingsBody>(
-        environments.api_saved_search_sync_settings, 
+        '', 
         body, 
     )
 }
