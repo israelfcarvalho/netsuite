@@ -3,4 +3,5 @@ export interface CollapsibleProps {
     title: string,
     initialState?: 'open' | 'closed'
     onOpenChange?: (open: boolean) => void
+    className?: string
 }

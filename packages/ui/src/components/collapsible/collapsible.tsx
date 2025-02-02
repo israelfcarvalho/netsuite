@@ -5,14 +5,15 @@ import { ChevronDown } from 'lucide-react'
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { cn } from '@workspace/ui/lib/utils'
-import styles from './collapsible.module.css' 
+import './collapsible.css' 
 import { CollapsibleProps } from './collapsible.styles'
 
 export const Collapsible: React.FC<CollapsibleProps> = ({
     children, 
     title,
     initialState = 'closed',
-    onOpenChange
+    onOpenChange,
+    className
 }) => {
     const childrenContainerRef = useRef<HTMLDivElement>(null)
     const [contentHeight, setContentHeight] = useState('fit-content')
@@ -42,7 +43,10 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
 
     return (
         <CollapsiblePrimitive.Root
-            className='bg-light-neutral-20 shadow-[0_0_4px_1px] shadow-light-neutral-60 p-4 rounded-md'
+            className={cn(
+                'bg-light-neutral-20 shadow-[0_0_4px_1px] shadow-light-neutral-60 p-4 rounded-md',
+                className
+            )}
             open={open} 
             onOpenChange={handleOpenChange}
         >
@@ -63,7 +67,7 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
             <CollapsiblePrimitive.Content
                 onAnimationEnd={handleConlapseContentEnd}
                 className={cn(
-                    styles.CollapsibleContent,
+                    'CollapsibleContent',
                     {'!overflow-visible': !nextOpen && open}
                 )}
                 style={{'--radix-collapsible-content-height': contentHeight}}
