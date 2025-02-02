@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import * as TabsPrimitives from '@radix-ui/react-tabs'
-import { cn } from "@workspace/ui/lib/utils";
 import { Separator } from "../separator";
 
 export interface Tab {
@@ -19,7 +18,7 @@ export const Tabs: React.FC<TabsProps> = ({
     return (
         <TabsPrimitives.Root className="py-4" defaultValue={tabs[0]?.id}>
             <TabsPrimitives.List className="grid grid-cols-[repeat(2,max-content)]">
-                {tabs.map((tab, index) => (
+                {tabs.map((tab) => (
                     <TabsPrimitives.TabsTrigger
                         
                         className='py-1 border-b-2 border-transparent data-[state=active]:border-light-brand-120 data-[state=inactive]:hover:bg-light-neutral-30 [&:not(:first-child)]:pl-6 pr-6 last:rounded-se-lg'
