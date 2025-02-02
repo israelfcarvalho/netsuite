@@ -179,7 +179,7 @@ export default function Page() {
             setDateExecutionSettings={setDateExecutionSettings}
           />
 
-          <Separator orientation="horizontal"/>
+          <Separator className="my-2 bg-transparent" orientation="horizontal"/>
 
           <StorageSection 
             destinyFolderPath={destinyFolderPath}
@@ -194,14 +194,14 @@ export default function Page() {
             createPeriodFolder={createPeriodFolder}
           />
 
-          <Separator orientation="horizontal"/>
+          <Separator className="my-2 bg-transparent" orientation="horizontal"/>
 
           <NotificationsSection 
             notificationSettings={notificationSettings}
             setNotificationSettings={setNotificationSettings}
           />
 
-          <Separator orientation="horizontal"/>
+          <Separator className="my-2 bg-transparent" orientation="horizontal"/>
 
           {link != undefined && (
             <ScheduleSection link={link}/>

@@ -157,7 +157,7 @@ export const NotificationSettingsForm: React.FC<NotificationSettingsFormProps> =
                 </div>
             </Collapsible>
 
-            <Separator />
+            <Separator className="bg-transparent my-2"/>
 
             <Collapsible title="Microsoft Share Point" initialState="open">
                 <div className="grid grid-cols-2 gap-14">
