@@ -66,7 +66,7 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
                     styles.CollapsibleContent,
                     {'!overflow-visible': !nextOpen && open}
                 )}
-                style={{'--radix-collapsible-content-height': contentHeight} as any}
+                style={{'--radix-collapsible-content-height': contentHeight}}
             >
                 <div ref={childrenContainerRef} className='h-fit'>
                     {children}
