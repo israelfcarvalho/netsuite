@@ -2,10 +2,10 @@
 
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import { ChevronDown } from 'lucide-react'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { cn } from '@workspace/ui/lib/utils'
-import './collapsible.css'
+import styles from './collapsible.module.css' 
 import { CollapsibleProps } from './collapsible.styles'
 
 export const Collapsible: React.FC<CollapsibleProps> = ({
@@ -14,6 +14,8 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
     initialState = 'closed',
     onOpenChange
 }) => {
+    const childrenContainerRef = useRef<HTMLDivElement>(null)
+    const [contentHeight, setContentHeight] = useState('fit-content')
     const [open, setOpen] = useState(initialState === 'open')
     const [nextOpen, setNextOpen] = useState(!(initialState === 'open'))
     
@@ -25,6 +27,18 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
     const handleConlapseContentEnd = () => {
         setNextOpen(!open)
     }
+
+    useEffect(() => {
+        if(childrenContainerRef.current){
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        if(childrenContainerRef.current){
+            const height = childrenContainerRef.current?.offsetHeight
+            setContentHeight(`${height}px`)
+        }
+    }, [children])
 
     return (
         <CollapsiblePrimitive.Root
@@ -49,11 +63,14 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
             <CollapsiblePrimitive.Content
                 onAnimationEnd={handleConlapseContentEnd}
                 className={cn(
-                    'CollapsibleContent',
+                    styles.CollapsibleContent,
                     {'!overflow-visible': !nextOpen && open}
                 )}
+                style={{'--radix-collapsible-content-height': contentHeight} as any}
             >
-                {children}
+                <div ref={childrenContainerRef} className='h-fit'>
+                    {children}
+                </div>
             </CollapsiblePrimitive.Content>
             
         </CollapsiblePrimitive.Root>
