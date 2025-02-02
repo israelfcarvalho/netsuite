@@ -4,10 +4,9 @@ import * as React from "react"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 
 import { cn } from "@workspace/ui/lib/utils"
+import * as DialogPrimitives from "@radix-ui/react-dialog"
 
 const Popover = PopoverPrimitive.Popover
-
-const PopoverPortal = PopoverPrimitive.PopoverPortal
 
 const PopoverTrigger = PopoverPrimitive.Trigger
 
@@ -17,7 +16,9 @@ const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
-    <PopoverPrimitive.Content
+  <PopoverPrimitive.PopoverPortal>
+    <DialogPrimitives.Overlay>
+      <PopoverPrimitive.Content
       ref={ref}
       align={align}
       sideOffset={sideOffset}
@@ -27,7 +28,9 @@ const PopoverContent = React.forwardRef<
       )}
       {...props}
     />
+    </DialogPrimitives.Overlay>
+  </PopoverPrimitive.PopoverPortal>
 ))
 PopoverContent.displayName = PopoverPrimitive.Content.displayName
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor, PopoverPortal }
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor }
