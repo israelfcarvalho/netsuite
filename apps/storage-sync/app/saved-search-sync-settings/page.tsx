@@ -163,7 +163,6 @@ export default function Page() {
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           onReset={savedSearchSyncSettingsData ?  () => setInitialData() : undefined}
-          contentClassname="pr-7"
         >
           <MainSection 
             name={name}

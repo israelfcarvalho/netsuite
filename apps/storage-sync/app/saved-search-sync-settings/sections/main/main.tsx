@@ -67,75 +67,67 @@ export const MainSection: React.FC<MainSectionOptions> = ({
 
     return (
       <>
-        <Collapsible title="Main" initialState="open">
-          <div className="grid grid-cols-3 gap-14">
-            <div className="flex flex-col gap-2 max-w-[350px]"> 
-              <Input
-                required
-                label="Name"
-                name="name"
-                onChange={setName}
-                value={name}
-              />
+        <Collapsible className="pr-8" title="Main" initialState="open">
+          <div className="grid grid-rows-3 md:grid-rows-2 grid-flow-col auto-cols-[1fr] gap-x-14 gap-y-4 items-center">
+            <Input
+              required
+              label="Name"
+              name="name"
+              onChange={setName}
+              value={name}
+            />
 
-              <Combobox
-                required  
-                name="saved_search"
-                label="Saved Search"
-                options={savedSearchOptions}
-                onSelect={setSavedSearch}
-                optionSelected={savedSearch}
-              />
-            </div>
+            <Combobox
+              required  
+              name="saved_search"
+              label="Saved Search"
+              options={savedSearchOptions}
+              onSelect={setSavedSearch}
+              optionSelected={savedSearch}
+            />
 
-            <div className="flex flex-col gap-2 max-w-[350px]"> 
-              <Input
-                label="Date Filter Field"
-                name="date-filter-field"
-                onChange={setDateFilterField}
-                value={dateFilterField}
-              />
+            <Input
+              label="Date Filter Field"
+              name="date-filter-field"
+              onChange={setDateFilterField}
+              value={dateFilterField}
+            />
+            <Combobox
+              required
+              name="period"
+              label="Period"
+              options={periodOptions}
+              onSelect={setPeriod}
+              optionSelected={period}
+            />
 
-              <Combobox
-                required
-                name="period"
-                label="Period"
-                options={periodOptions}
-                onSelect={setPeriod}
-                optionSelected={period}
-              />
-            </div>
+            <Input
+              required
+              label="Period Delay (Days)"
+              name="period-delay"
+              onChange={setPeriodDelay}
+              value={periodDelay}
+            />
 
-              <div className="flex flex-col gap-2 max-w-[350px]"> 
-                <Input
-                  required
-                  label="Period Delay (Days)"
-                  name="period-delay"
-                  onChange={setPeriodDelay}
-                  value={periodDelay}
+            <div className="flex gap-2 relative">
+              <Combobox 
+                name="date-execution-settings"
+                label={dateExecutionSettingsLabel}
+                options={dateExecutionSettingsOptions}
+                optionSelected={dateExecutionSettings}
+                onSelect={setDateExecutionSettings}
+              />
+              <div className="h-[fit-content] absolute top-8 -right-6">
+                <FormFieldOptions
+                  fieldLabel={dateExecutionSettingsLabel}
+                  options={[
+                    {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewExecutionDateSetting},
+                    {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !dateExecutionSettings, onSelected: editExecutionDateSetting}
+                  ]}
                 />
-
-                <div className="flex gap-2 relative">
-                  <Combobox 
-                    name="date-execution-settings"
-                    label={dateExecutionSettingsLabel}
-                    options={dateExecutionSettingsOptions}
-                    optionSelected={dateExecutionSettings}
-                    onSelect={setDateExecutionSettings}
-                  />
-
-                  <div className="h-[fit-content] absolute top-8 -right-6">
-                    <FormFieldOptions
-                      fieldLabel={dateExecutionSettingsLabel}
-                      options={[
-                        {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewExecutionDateSetting},
-                        {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !dateExecutionSettings, onSelected: editExecutionDateSetting}
-                      ]}
-                    />
-                  </div>
-                </div>
               </div>
             </div>
+          </div>
         </Collapsible>
         {dateExecutionSettingsFormMode !== 'closed' && (
           <DateExecutionSettingsForm 

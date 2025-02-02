@@ -44,30 +44,30 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
 
     return (
       <>
-        <Collapsible title="Notification" initialState="open">
-            <div className="grid grid-cols-3 gap-14">
-                <div className="flex flex-col gap-2 max-w-[350px]"> 
-                    <div className="flex gap-2 relative">
-                      <Combobox
-                        required
-                        label={NotificationSettingsLabel}
-                        name="notification_settings"
-                        options={notificationSettingsOptions}
-                        onSelect={setNotificationSettings}
-                        optionSelected={notificationSettings}
-                      />
-                      
-                      <div className="h-[fit-content] absolute top-8 -right-6">
-                        <FormFieldOptions
-                          fieldLabel={NotificationSettingsLabel}
-                          options={[
-                            {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewNotificationSetting},
-                            {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !notificationSettings, onSelected: editNotificationSetting}
-                          ]}
-                        />
-                      </div>
-                    </div>
+        <Collapsible className="pr-8" title="Notification" initialState="open">
+            <div className="grid grid-rows-2 md:grid-rows-1 grid-flow-col auto-cols-[1fr] gap-x-14 gap-y-4 items-center">
+              <div className="flex gap-2 relative">
+                <Combobox
+                  required
+                  label={NotificationSettingsLabel}
+                  name="notification_settings"
+                  options={notificationSettingsOptions}
+                  onSelect={setNotificationSettings}
+                  optionSelected={notificationSettings}
+                />
+                
+                <div className="h-[fit-content] absolute top-8 -right-6">
+                  <FormFieldOptions
+                    fieldLabel={NotificationSettingsLabel}
+                    options={[
+                      {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewNotificationSetting},
+                      {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !notificationSettings, onSelected: editNotificationSetting}
+                    ]}
+                  />
                 </div>
+              </div>
+              <div></div>
+              <div></div>
             </div>
         </Collapsible>
 

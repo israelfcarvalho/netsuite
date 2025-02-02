@@ -10,7 +10,7 @@ export const ScheduleSection: React.FC<{link: string}> = ({
 }) => {
 
   return (
-    <Collapsible title="Schedule" initialState="open">
+    <Collapsible className="pr-8" title="Schedule" initialState="open">
       <h3 className="text-xs text-light-neutral-100 font-semibold">
         {linkLabel}
       </h3>
