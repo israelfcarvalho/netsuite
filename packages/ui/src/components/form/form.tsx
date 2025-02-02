@@ -18,7 +18,8 @@ export const Form: React.FC<FormProps> = ({
     onCancel,
     onReset,
     submitLabel = 'Save',
-    contentClassname
+    contentClassname,
+    logo
 }) => {
     const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>((event) => {
         event.preventDefault()
@@ -33,7 +34,8 @@ export const Form: React.FC<FormProps> = ({
         >
             <div className={cn(
                 headerAndContentSyncSpaceClassName,
-                "py-4 bg-light-neutral-30 shadow-lg z-10"
+                "py-4 bg-light-neutral-30 shadow-lg z-10",
+                "grid grid-flow-col grid-rows-[repeat(2, minmax(0,auto))] items-center"
             )}>
                 {!!title && <h2 className="text-xl font-bold">{title}</h2>}
 
@@ -60,6 +62,9 @@ export const Form: React.FC<FormProps> = ({
                         </Button>
                     )}
                 </div>
+                {!!logo && (
+                    <div className="justify-self-end h-14 row-span-2">{logo}</div>
+                )}
             </div>
             
             <ScrollableArea 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 export interface FormProps {
     title?: string;
@@ -9,6 +9,7 @@ export interface FormProps {
     onReset?: VoidFunction
     submitLabel?: string
     contentClassname?: string
+    logo?: ReactNode
 }
 
 
