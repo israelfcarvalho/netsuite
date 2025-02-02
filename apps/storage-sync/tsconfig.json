@@ -15,6 +15,7 @@
     ]
   },
   "include": [
+    "../../packages/ui/src/**/*.d.ts",
     "next-env.d.ts",
     "next.config.mjs",
     "**/*.ts",
