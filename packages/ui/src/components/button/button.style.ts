@@ -9,7 +9,7 @@ export const buttonStyleVariants = tv({
           destructive:
             "bg-destructive text- shadow-sm hover:bg-destructive/90 focus:outline-destructive",
           outline:
-            "text-text-primary border border-light-enabled bg-transparent shadow-sm hover:bg-light-neutral-190/10",
+            "text-text-primary border-solid border border-light-enabled bg-transparent shadow-sm hover:bg-light-neutral-190/10",
           secondary:
             "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
           ghost: "hover:bg-light-neutral-50 hover:text-accent-foreground focus:outline-light-neutral-50",
