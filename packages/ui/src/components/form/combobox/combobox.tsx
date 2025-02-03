@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
 import { FormControl, FormField, FormLabel } from '@radix-ui/react-form'
 import { FixedSizeList as List } from 'react-window'
@@ -20,6 +20,7 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     disabled,
     viewMode
 }) => {
+    const [optionSelectedCache, setOptionSelectedCache] = useState<typeof optionSelected>()
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState('')
     const [search, setSearch] = React.useState('')
@@ -53,7 +54,35 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     const cancel = () => {
         setTimeout(() => {
             setOpen(false)
+            setOptionSelectedCache(undefined)
         }, 100);
+    }
+
+    const onSearchChange = (search: string) => {
+        if(!search){
+            if(optionSelected){
+                setOptionSelectedCache(optionSelected)
+            }
+            handleSelect(undefined)
+        }
+
+        setSearch(search)
+        setOpen(true)
+    }
+
+    const handleKeyboard: KeyboardEventHandler<HTMLInputElement> = (event) => {
+        if(event.key === 'Escape'){
+            if(optionSelectedCache){
+                onSelect(optionSelectedCache)
+            }            
+        }
+    }
+
+    const handleSelect = (option: typeof optionSelected) => {
+        onSelect(option)
+        setValue(option?.label ?? '')
+        setSearch(option?.label ?? '')
+        setOpen(false)
     }
 
     return (
@@ -78,13 +107,11 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                             )}
                             role='combobox'
                             aria-expanded={open} 
-                            onValueChange={(value) => {
-                                setSearch(value)
-                                setOpen(true)
-                            }}
+                            onValueChange={onSearchChange}
                             onFocus={() => setOpen(true)}
                             onBlur={cancel}
                             value={search}
+                            onKeyDown={handleKeyboard}
                         />
                     </FormControl>
 
@@ -127,12 +154,7 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                                         )}
                                         key='blank' 
                                         value='blank' 
-                                        onSelect={() => {
-                                            onSelect(undefined)
-                                            setValue('')
-                                            setSearch('')
-                                            setOpen(false)
-                                        }}
+                                        onSelect={() => handleSelect(undefined)}
                                     />
                                     )
                                 }
@@ -144,12 +166,7 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                                         )}
                                         key={option.id} 
                                         value={option.value} 
-                                        onSelect={() => {
-                                            onSelect(option)
-                                            setValue(option.value)
-                                            setSearch(option.label)
-                                            setOpen(false)
-                                        }}
+                                        onSelect={() => handleSelect(option)}
                                         style={{...style}}
                                     >
                                         <span title={option.label} className='w-full h-full items-center whitespace-nowrap overflow-hidden text-ellipsis'>

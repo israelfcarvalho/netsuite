@@ -17,5 +17,5 @@ export interface ComboboxProps<T extends ComboboxOption = ComboboxOption> {
 type ComboboxComponent<T extends ComboboxOption> = React.FC<ComboboxProps<T>>
 
 export type ComboboxFactoryInterface = {
-    <T extends ComboboxOption>(): React.FC<ComboboxProps<T>>
+    <T extends ComboboxOption>(): ComboboxComponent<T>
 }
