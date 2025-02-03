@@ -1,9 +1,11 @@
 import { Router } from 'express'
 import { employee } from './employee/employee.js'
+import { savedSearch } from './saved-search/saved-search.js'
 
 const savedSearchSyncSettings = Router()
 
 savedSearchSyncSettings.use('/employee', employee)
+savedSearchSyncSettings.use('/saved-search', savedSearch)
 
 const savedSearchSyncData = Array.from({length: 10}, (_, index) => ({
     id: index,
@@ -21,7 +23,7 @@ const savedSearchSyncData = Array.from({length: 10}, (_, index) => ({
     destinyFolderPath: 'Isaac SM Testing',
     fileNamePrefix: 'sm-isaac-testing',
     appendExecutionDateToFileName: true,
-    createPeriodFolder: true,
+    createPeriodFolder: index % 2 ? true : false,
     notificationSettings: {
         id: '1',
         name: 'Main Notification'
