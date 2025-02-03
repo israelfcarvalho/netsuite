@@ -64,7 +64,7 @@ export class NetSuiteError implements INetSuiteError {
     }
 
     private stringToNetsuiteError(error: string): INetSuiteError {
-        const data: unknown = JSON.parse(error.replaceAll('\n', '<br/>'))
+        const data: unknown = JSON.parse(error.replaceAll('\n', '<br/>').replaceAll("\'", "'"))
         if(typeof data === 'object' && data !== null){
             if(this.isRawNetSuiteError(data)){
                 return this.rawNetsuiteErrorToNetsuiteError(data)

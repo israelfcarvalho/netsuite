@@ -84,6 +84,15 @@ savedSearchSyncSettings.get('/', (req, res) => {
     return res.json(getSavedSearchSyncSettings(pageSize, pageIndex))
 })
 
+savedSearchSyncSettings.post('/', (req, res) => {
+    res.status(400).send(JSON.stringify({
+        "error": {
+            "code": "",
+            "message": "Cannot read property \'id\' of undefined"
+        }
+    }))
+})
+
 export {
     savedSearchSyncSettings
 }

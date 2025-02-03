@@ -65,7 +65,7 @@ export class Api implements Api {
         return [path, paramsArray.join('&')].join('?')
     }
 
-    private errorMiddleware<TData extends unknown>(res: TData | RawNetsuiteError){   
+    private errorMiddleware<TData extends unknown>(res: TData | RawNetsuiteError){
         if(res && typeof res === 'object' && 'error' in res ){
             throw new NetSuiteError(res)
         }
@@ -87,7 +87,9 @@ export class Api implements Api {
                 const contentTypeIsApplicationJson = headerContentTypes.includes(contentTypeAppJson)
 
                 if(contentTypeIsApplicationJson){
-                    res.json().then(reject)
+                    res.text().then(res => {
+                        reject(JSON.parse(res.replaceAll("\\'", "").replaceAll("\n", "<br/>").replaceAll("\'", "")))
+                    })
                 } else {
                     const error: RawNetsuiteError = {
                         error: {
