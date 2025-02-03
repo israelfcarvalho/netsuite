@@ -177,7 +177,6 @@ export const DateExecutionSettingsForm: React.FC<ExecutionDateSettingsFormProps>
                     />
 
                     <Combobox
-                      required
                       label='Holiday Settings'
                       name="holiday-settings"
                       options={holidaySettingsOptions}
