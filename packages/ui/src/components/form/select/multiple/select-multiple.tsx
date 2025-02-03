@@ -6,7 +6,6 @@ import {
   ChevronDown,
   XIcon,
 } from "lucide-react";
-import { Search } from 'js-search'
 import { FixedSizeList as List } from 'react-window'
 
 import { 
@@ -24,7 +23,7 @@ import {
     CommandItem,
     FormFieldOption,
 } from "@workspace/ui/components";
-import { cn } from "@workspace/ui/lib/utils";
+import { cn, searchEngine } from "@workspace/ui/lib/utils";
 
 export interface MultiSelectOption extends FormFieldOption {
   id: string
@@ -79,10 +78,6 @@ export interface MultiSelectProps {
   selectedOptions: MultiSelectOption[]
 }
 
-const searchEngine = new Search('id')
-searchEngine.addIndex('label')
-
-
 //TODO: Melhorar algoritmo para itens selecionado e geracao de options. Muitos calculos estao sendo feitos durante search e toggle
 export const MultiSelect: React.FC<MultiSelectProps> = ({
       options: incomingOptions,
@@ -102,7 +97,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     
     const options = useMemo<MultiSelectOption[]>(() => {
       if(search){
-        const optionsProspect = searchEngine.search(search) as MultiSelectOption[]
+        const optionsProspect = searchEngine(incomingOptions, ['label'], search)
         return optionsProspect
       }
     
@@ -124,12 +119,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       
       return [...selected, ...nonSelected]
     }, [options, selectedOptions])
-
-    useEffect(() => {
-      if(!!incomingOptions.length){
-        searchEngine.addDocuments(incomingOptions)
-      }
-    }, [incomingOptions])
 
     useEffect(() => {
       if(selectedOptions !== selectedValues) {
