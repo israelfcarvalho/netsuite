@@ -20,24 +20,41 @@ const Table = tableFactory<SavedSearchSyncSettings, 'edit'>([
       header: ({column}) => {
           return (
               <div
-                  className="px-4 py-2 rounded-none w-full justify-start text-xs"
+                  className="flex px-4 py-2 rounded-none w-full justify-start text-xs"
                   style={{width: column.getSize()}}
               >
-                Edit
+                Edit 
+                
+                <span className="mx-1">|</span>
+
+                View
               </div>
           )
       },
       cell: ({ row }) => (
-        <NextLink href={`${savedSearchSettingsPath}&view=management&id=${row.getValue('id')}`} passHref legacyBehavior>
+        <div className="flex px-4 items-center">
+          <NextLink href={`${savedSearchSettingsPath}&view=management&id=${row.getValue('id')}`} passHref legacyBehavior>
             <Link
-                className="px-4 py-2 text-xs"
+                className="py-2 text-xs"
                 label={`Edit Saved Search Setting ${row.getValue('name')}`} 
             >
               Edit
             </Link>
+        </NextLink>
+
+        <span className="mx-1">|</span>
+
+        <NextLink href={`${savedSearchSettingsPath}&view=management&id=${row.getValue('id')}&view-mode=true`} passHref legacyBehavior>
+            <Link
+                className=" py-2 text-xs"
+                label={`Edit Saved Search Setting ${row.getValue('name')}`} 
+            >
+              View
+            </Link>
       </NextLink>
+        </div>
       ),
-      size: 60
+      size: 92
     },
     {
         accessorKey: "id",

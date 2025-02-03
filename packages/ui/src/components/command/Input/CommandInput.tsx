@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from "react"
+import React from "react"
 import { CommandInput as CommandInputPrimitive } from "cmdk"
 import { Search } from "lucide-react"
 
@@ -22,8 +22,8 @@ export const CommandInput = React.forwardRef<CommandInputRef, CommandInputProps>
         <CommandInputPrimitive
           ref={ref}
           className={cn(
-            className,
-            inputClassName
+            inputClassName,
+            className
           )}
           {...props}
         />

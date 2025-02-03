@@ -6,4 +6,6 @@ export interface CheckboxProps {
     defaultChecked?: boolean
     onChange(value: boolean): void
     value: boolean
+    viewMode?: boolean
+    disabled?: boolean
 }

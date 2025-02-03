@@ -8,7 +8,7 @@ export interface NetsuiteFieldOption {
 export function netsuiteOptionsToFormFieldOptions(options: NetsuiteFieldOption[]): FormFieldOption[] {
     return options.map(option => ({
         id: option.id,
-        label: option.name,
-        value: option.name,
+        label: option.name.trim(),
+        value: option.name.trim(),
     }))
 }

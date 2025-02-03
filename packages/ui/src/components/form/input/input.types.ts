@@ -8,4 +8,6 @@ export interface InputProps {
     onChange: (value: string) => void
     labeless?:boolean
     variant?: InputVariant
+    disabled?: boolean
+    viewMode?: boolean
 }

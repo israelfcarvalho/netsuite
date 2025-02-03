@@ -3,12 +3,10 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
 import { FormControl, FormField, FormLabel } from '@radix-ui/react-form'
-import { Search } from 'js-search'
 import { FixedSizeList as List } from 'react-window'
 
-import { cn } from '@workspace/ui/lib/utils'
+import { cn, searchEngine } from '@workspace/ui/lib/utils'
 import { ComboboxFactoryInterface } from './combobox.types'
-import { ScrollableArea } from '../../scrollable-area'
 import { CommandInput } from '../../command'
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '../../command/command'
 
@@ -18,7 +16,9 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     name,
     label,
     onSelect,
-    optionSelected
+    optionSelected,
+    disabled,
+    viewMode
 }) => {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState('')
@@ -26,16 +26,10 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     const formFieldRef = useRef<React.ElementRef<typeof FormField>>(null)
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const searchEngine = useMemo(() => {
-        const searchEngine = new Search(name)
-        searchEngine.addIndex('label')
-
-        return searchEngine
-    }, [name])
-
     const options = useMemo<typeof incomingOptions>(() => {
       if(search){
-        const optionsProspect = searchEngine.search(search) as typeof incomingOptions
+        const optionsProspect = searchEngine(incomingOptions, ['label'], search)
+
         return optionsProspect
       }
     
@@ -43,12 +37,6 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     
       return [blankOption, ...incomingOptions]
     }, [incomingOptions, search, required])
-
-    useEffect(() => {
-      if(!!incomingOptions.length){
-        searchEngine.addDocuments(incomingOptions)
-      }
-    }, [incomingOptions])
 
     useEffect(() => {
         if(optionSelected){
@@ -74,14 +62,20 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                 <FormLabel
                     className="font-sans text-xs text-input-label font-semibold"
                 >
-                    {label} {required && <span className="ml-[2px] text-light-danger-120 text-base">*</span>}
+                    {label} 
+                    
+                    {required && !viewMode && <span className="ml-[2px] text-light-danger-120 text-base">*</span>}
                 </FormLabel>
 
                 <div className='w-full relative'>
                     <FormControl asChild>
                         <CommandInput
+                            disabled={viewMode || disabled}
                             ref={inputRef}
-                            className='bg-light-neutral'
+                            className={cn(
+                                'bg-light-neutral border-solid border border-input-border',
+                                {'disabled:cursor-default border-0 px-0 rounded-none bg-transparent': viewMode}
+                            )}
                             role='combobox'
                             aria-expanded={open} 
                             onValueChange={(value) => {
@@ -94,17 +88,23 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                         />
                     </FormControl>
 
-                    {!open && (<ChevronDown role='button' aria-label={`open ${label}`} onClick={() => inputRef.current?.focus()} className='absolute size-6 pr-2 top-1 right-0 cursor-pointer'/>)}
+                    {!open && !viewMode && (
+                        <ChevronDown 
+                            role='button' 
+                            aria-label={`open ${label}`} 
+                            onClick={() => inputRef.current?.focus()} 
+                            className='absolute size-6 pr-2 top-1 right-0 cursor-pointer'
+                        />
+                    )}
                 </div>
             </FormField>
-            <ScrollableArea 
-                className={cn(
-                    '!absolute max-h-56 mt-px w-full z-10 shadow-[0px_10px_20px_0px] shadow-light-neutral-60 rounded-b-md',
-                    !open && 'hidden'
-                )}
-                style={{top: formFieldRef.current?.offsetHeight}}
-            >
-                <CommandList>
+                <CommandList 
+                    className={cn(
+                        '!absolute max-h-56 mt-px w-full z-10 shadow-[0px_10px_20px_0px] shadow-light-neutral-60 rounded-b-md',
+                        !open && 'hidden'
+                    )}
+                    style={{top: formFieldRef.current?.offsetHeight}}
+                >
                     <CommandEmpty>
                         {!!options.length ? 'No results Found' : 'No options available'}
                     </CommandEmpty>
@@ -123,7 +123,7 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                                     return (
                                     <CommandItem
                                         className={cn(
-                                            'flex justify-between w-full h-8',
+                                            'flex justify-between h-8',
                                         )}
                                         key='blank' 
                                         value='blank' 
@@ -140,7 +140,7 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                                 return (
                                     <CommandItem
                                         className={cn(
-                                            'flex justify-between',
+                                            'flex justify-between py-0 flex-nowrap',
                                         )}
                                         key={option.id} 
                                         value={option.value} 
@@ -150,12 +150,14 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                                             setSearch(option.label)
                                             setOpen(false)
                                         }}
-                                        style={style}
+                                        style={{...style}}
                                     >
-                                        {option.label}
+                                        <span title={option.label} className='w-full h-full items-center whitespace-nowrap overflow-hidden text-ellipsis'>
+                                            {option.label}
+                                        </span>
                                         <Check
                                             className={cn(
-                                                "h-4 w-4",
+                                                "size 4",
                                                 value === option.value ? "opacity-100" : "opacity-0"
                                             )}
                                         />
@@ -165,7 +167,6 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                         </List>
                     </CommandGroup>
                 </CommandList>
-            </ScrollableArea>
         </Command>
     ) 
 }

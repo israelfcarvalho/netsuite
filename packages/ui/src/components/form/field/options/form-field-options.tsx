@@ -14,6 +14,7 @@ import {
 export const FormFieldOptions = React.forwardRef<FormFieldOptionsRef, FormFieldOptionsProps>(({
     fieldLabel,
     options,
+    align = 'start',
     ...props
 }, ref) => {
     if(!options.length) {
@@ -35,7 +36,7 @@ export const FormFieldOptions = React.forwardRef<FormFieldOptionsRef, FormFieldO
             <DropdownMenuPortal>
                 <DropdownMenuContent 
                     className="bg-light-neutral-10 shadow-[0_0_8px] shadow-light-neutral-190 rounded-md overflow-hidden"
-                    align="start"
+                    align={align}
                 >
                     {options.map(option => (!option.disabled &&
                         <DropdownMenuItem

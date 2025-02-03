@@ -7,6 +7,7 @@ import { FilePenLine, FilePlus2 } from "lucide-react";
 import { FormFieldOptions } from "@workspace/ui/components";
 import { useNotificationSettingsOptions } from "./notifications.api";
 import { NotificationSettingsForm, NotificationSettingsFormProps } from './settings'
+import { useSearchParams } from "next/navigation";
 
 const Combobox = ComboboxFactory()
 const NotificationSettingsLabel = "Notification Settings"
@@ -22,6 +23,10 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
   notificationSettings,
   setNotificationSettings
 }) => {
+    const params = useSearchParams()
+  
+    const viewMode = params.get('view-mode') === "true"
+
     const { notificationSettingsOptions} = useNotificationSettingsOptions()
 
     const [notificationSettingsFormMode, setNotificationSettingsFormMode] = useState<NotificationSettingsFormMode>('closed')
@@ -48,6 +53,7 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
             <div className="grid grid-rows-2 md:grid-rows-1 grid-flow-col auto-cols-[1fr] gap-x-14 gap-y-4 items-center">
               <div className="flex gap-2 relative">
                 <Combobox
+                  viewMode={viewMode}
                   required
                   label={NotificationSettingsLabel}
                   name="notification_settings"
@@ -56,15 +62,17 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
                   optionSelected={notificationSettings}
                 />
                 
-                <div className="h-[fit-content] absolute top-8 -right-6">
-                  <FormFieldOptions
-                    fieldLabel={NotificationSettingsLabel}
-                    options={[
-                      {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewNotificationSetting},
-                      {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !notificationSettings, onSelected: editNotificationSetting}
-                    ]}
-                  />
-                </div>
+                {!viewMode && (
+                  <div className="h-[fit-content] absolute top-8 -right-6">
+                    <FormFieldOptions
+                      fieldLabel={NotificationSettingsLabel}
+                      options={[
+                        {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewNotificationSetting},
+                        {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !notificationSettings, onSelected: editNotificationSetting}
+                      ]}
+                    />
+                  </div>
+                )}
               </div>
               <div></div>
               <div></div>

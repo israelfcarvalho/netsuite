@@ -7,6 +7,7 @@ import { usePeriodOptions, useSavedSearchOptions } from "./main.api";
 import { useDateExecutionSettingsOptions } from "./date-execution-settings/form/form.api";
 import { DateExecutionSettingsForm, ExecutionDateSettingsFormProps } from "./date-execution-settings";
 import { FilePenLine, FilePlus2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 const Combobox = ComboboxFactory()
 
@@ -43,6 +44,9 @@ export const MainSection: React.FC<MainSectionOptions> = ({
   setDateExecutionSettings,
   dateExecutionSettings
 }) => {
+    const params = useSearchParams()
+    const viewMode = params.get('view-mode') === "true"
+
     const { dateExecutionSettingsOptions } = useDateExecutionSettingsOptions()
     const { savedSearchOptions } = useSavedSearchOptions()
     const { periodOptions } = usePeriodOptions()
@@ -70,6 +74,7 @@ export const MainSection: React.FC<MainSectionOptions> = ({
         <Collapsible className="pr-8" title="Main" initialState="open">
           <div className="grid grid-rows-3 md:grid-rows-2 grid-flow-col auto-cols-[1fr] gap-x-14 gap-y-4 items-center">
             <Input
+              viewMode={viewMode}
               required
               label="Name"
               name="name"
@@ -78,6 +83,7 @@ export const MainSection: React.FC<MainSectionOptions> = ({
             />
 
             <Combobox
+              viewMode={viewMode}
               required  
               name="saved_search"
               label="Saved Search"
@@ -87,12 +93,15 @@ export const MainSection: React.FC<MainSectionOptions> = ({
             />
 
             <Input
+              viewMode={viewMode}
               label="Date Filter Field"
               name="date-filter-field"
               onChange={setDateFilterField}
               value={dateFilterField}
             />
+
             <Combobox
+              viewMode={viewMode}
               required
               name="period"
               label="Period"
@@ -102,6 +111,7 @@ export const MainSection: React.FC<MainSectionOptions> = ({
             />
 
             <Input
+              viewMode={viewMode}
               required
               label="Period Delay (Days)"
               name="period-delay"
@@ -111,21 +121,25 @@ export const MainSection: React.FC<MainSectionOptions> = ({
 
             <div className="flex gap-2 relative">
               <Combobox 
+                viewMode={viewMode}
                 name="date-execution-settings"
                 label={dateExecutionSettingsLabel}
                 options={dateExecutionSettingsOptions}
                 optionSelected={dateExecutionSettings}
                 onSelect={setDateExecutionSettings}
               />
-              <div className="h-[fit-content] absolute top-8 -right-6">
-                <FormFieldOptions
-                  fieldLabel={dateExecutionSettingsLabel}
-                  options={[
-                    {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewExecutionDateSetting},
-                    {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !dateExecutionSettings, onSelected: editExecutionDateSetting}
-                  ]}
-                />
-              </div>
+              {!viewMode && (
+                <div className="h-[fit-content] absolute top-8 -right-6">
+                  <FormFieldOptions
+                    align="end"
+                    fieldLabel={dateExecutionSettingsLabel}
+                    options={[
+                      {icon: FilePlus2, id: 'add', name: 'New Date Execution Setting', onSelected: addNewExecutionDateSetting},
+                      {icon: FilePenLine, id: 'edit', name: 'Edit Date Execution Setting', disabled: !dateExecutionSettings, onSelected: editExecutionDateSetting}
+                    ]}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </Collapsible>

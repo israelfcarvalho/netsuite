@@ -10,7 +10,9 @@ export const Input: React.FC<InputProps> = ({
     value,
     required = false,
     labeless,
-    variant
+    variant,
+    disabled,
+    viewMode
 }) => {
     return (
         <FormField name={name}>
@@ -20,14 +22,18 @@ export const Input: React.FC<InputProps> = ({
             >
                 {label} 
                 
-                {required && <span className="ml-[2px] text-light-danger-120 text-base">*</span>}
+                {required && !viewMode && <span className="ml-[2px] text-light-danger-120 text-base">*</span>}
             </FormLabel>
             )}
             <FormControl
+                disabled={disabled || viewMode}
                 aria-label={!!labeless ? label : undefined}
                 className={cn(
-                    "border-input-border border rounded-md w-full min-h-8 text-sm px-2 outline-input-border-selected",
-                    {'border-none': variant === 'outline' }
+                    "border-input-border border border-solid rounded-md w-full min-h-8 text-sm px-2 outline-input-border-selected disabled:opacity-50",
+                    {
+                        'border-none': variant === 'outline',
+                        'border-0 rounded-none px-0 bg-transparent': !!viewMode
+                    }
                 )}
                 type="text"
                 name={name}

@@ -7,6 +7,7 @@ import { FilePenLine, FilePlus2 } from "lucide-react";
 import { FormFieldOptions } from "@workspace/ui/components";
 import { StorageSettingsForm, StorageSettingsFormProps } from "./settings";
 import { useStorageSettingsOptions } from "./storage.api";
+import { useSearchParams } from "next/navigation";
 
 const Combobox = ComboboxFactory()
 
@@ -41,6 +42,9 @@ export const StorageSection: React.FC<StorageSettingsSection> = ({
   appendExecutionDateToFileName,
   createPeriodFolder
 }) => {
+    const params = useSearchParams()
+    const viewMode = params.get('view-mode') === "true"
+
     const { storageSettingsOptions } = useStorageSettingsOptions()
 
     const [storageSettingsFormMode, setStorageSettingsFormMode] = useState<StorageSettingsFormMode>('closed')
@@ -66,6 +70,7 @@ export const StorageSection: React.FC<StorageSettingsSection> = ({
               <div className="grid grid-rows-3 md:grid-rows-2 grid-flow-col auto-cols-[1fr] gap-x-14 gap-y-4 items-center">
                 <div className="flex gap-2 items-end relative">
                   <Combobox
+                    viewMode={viewMode}
                     required
                     label={StorageSettingsLabel}
                     name="storage_settings"
@@ -74,18 +79,21 @@ export const StorageSection: React.FC<StorageSettingsSection> = ({
                     optionSelected={storageSettings}
                   />
                   
-                  <div className="h-[fit-content] absolute top-8 -right-6">
-                    <FormFieldOptions
-                      fieldLabel={StorageSettingsLabel}
-                      options={[
-                        {icon: FilePlus2, id: 'add', name: 'New Storage Setting', onSelected: addNewStorageSetting},
-                        {icon: FilePenLine, id: 'edit', name: 'Edit Storage Setting', disabled: !storageSettings, onSelected: editStorageSetting}
-                      ]}
-                    />
-                  </div>
+                  {!viewMode && (
+                    <div className="h-[fit-content] absolute top-8 -right-6">
+                      <FormFieldOptions
+                        fieldLabel={StorageSettingsLabel}
+                        options={[
+                          {icon: FilePlus2, id: 'add', name: 'New Storage Setting', onSelected: addNewStorageSetting},
+                          {icon: FilePenLine, id: 'edit', name: 'Edit Storage Setting', disabled: !storageSettings, onSelected: editStorageSetting}
+                        ]}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <Input
+                  viewMode={viewMode}
                   required  
                   name="destiny_folder_path"
                   label="Destiny Folder Path"
@@ -93,7 +101,8 @@ export const StorageSection: React.FC<StorageSettingsSection> = ({
                   value={destinyFolderPath}
                 />
 
-                <Checkbox 
+                <Checkbox
+                  viewMode={viewMode}
                   id="storage-create-period-folder" 
                   label="Create Period Folder" 
                   defaultChecked={CREATE_PERIOD_FOLDER_DEFAULT}
@@ -102,6 +111,7 @@ export const StorageSection: React.FC<StorageSettingsSection> = ({
                 />
 
                 <Input
+                  viewMode={viewMode}
                   required
                   name="file_name_prefix"
                   label="File Name Prefix"
@@ -109,7 +119,8 @@ export const StorageSection: React.FC<StorageSettingsSection> = ({
                   value={fileNamePrefix}
                 />
 
-                <Checkbox 
+                <Checkbox
+                  viewMode={viewMode}
                   id="append_execution_date_to_file_name" 
                   label="Append Execution Date To File Name" 
                   defaultChecked={APPEND_EXECUTION_DATE_TO_FILE_NAME_DEFAULT}

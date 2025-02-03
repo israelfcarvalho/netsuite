@@ -7,7 +7,6 @@ import { useEmailTemplateOptions, useEmployeeOptions, useNotificationSettings, u
 import { NotificationSettingsFormProps } from "./form.types";
 import { useAlert } from "@workspace/ui/hooks";
 
-
 const Combobox = ComboboxFactory()
 
 export const NotificationSettingsForm: React.FC<NotificationSettingsFormProps> = ({
