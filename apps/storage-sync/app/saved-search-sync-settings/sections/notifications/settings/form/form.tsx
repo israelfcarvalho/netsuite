@@ -173,7 +173,6 @@ export const NotificationSettingsForm: React.FC<NotificationSettingsFormProps> =
                     />
 
                     <MultiSelect
-                        required
                         label={{
                             id: 'notification-settings-copies-to-employee',
                             name: 'Copies To (Employee)'
