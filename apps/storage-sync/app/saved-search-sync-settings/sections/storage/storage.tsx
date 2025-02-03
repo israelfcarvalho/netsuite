@@ -84,8 +84,8 @@ export const StorageSection: React.FC<StorageSettingsSection> = ({
                       <FormFieldOptions
                         fieldLabel={StorageSettingsLabel}
                         options={[
-                          {icon: FilePlus2, id: 'add', name: 'New Storage Setting', onSelected: addNewStorageSetting},
-                          {icon: FilePenLine, id: 'edit', name: 'Edit Storage Setting', disabled: !storageSettings, onSelected: editStorageSetting}
+                          {icon: FilePlus2, id: 'add', name: 'New Storage Settings', onSelected: addNewStorageSetting},
+                          {icon: FilePenLine, id: 'edit', name: 'Edit Storage Settings', disabled: !storageSettings, onSelected: editStorageSetting}
                         ]}
                       />
                     </div>

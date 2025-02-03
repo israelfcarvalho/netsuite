@@ -67,8 +67,8 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
                     <FormFieldOptions
                       fieldLabel={NotificationSettingsLabel}
                       options={[
-                        {icon: FilePlus2, id: 'add', name: 'New Notification Setting', onSelected: addNewNotificationSetting},
-                        {icon: FilePenLine, id: 'edit', name: 'Edit Notification Setting', disabled: !notificationSettings, onSelected: editNotificationSetting}
+                        {icon: FilePlus2, id: 'add', name: 'New Notification Settings', onSelected: addNewNotificationSetting},
+                        {icon: FilePenLine, id: 'edit', name: 'Edit Notification Settings', disabled: !notificationSettings, onSelected: editNotificationSetting}
                       ]}
                     />
                   </div>

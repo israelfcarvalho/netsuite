@@ -134,8 +134,8 @@ export const MainSection: React.FC<MainSectionOptions> = ({
                     align="end"
                     fieldLabel={dateExecutionSettingsLabel}
                     options={[
-                      {icon: FilePlus2, id: 'add', name: 'New Date Execution Setting', onSelected: addNewExecutionDateSetting},
-                      {icon: FilePenLine, id: 'edit', name: 'Edit Date Execution Setting', disabled: !dateExecutionSettings, onSelected: editExecutionDateSetting}
+                      {icon: FilePlus2, id: 'add', name: 'New Date Execution Settings', onSelected: addNewExecutionDateSetting},
+                      {icon: FilePenLine, id: 'edit', name: 'Edit Date Execution Settings', disabled: !dateExecutionSettings, onSelected: editExecutionDateSetting}
                     ]}
                   />
                 </div>
