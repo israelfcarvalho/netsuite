@@ -9,10 +9,7 @@ import { useSavedSearchSyncSettingsList } from "./saved-search-sync-settings/sav
 import { environments } from "@/environments";
 import { SavedSearchSyncSettings } from "./saved-search-sync-settings/saved-search-sync-settings.types";
 
-const {isProduction, netsuite_path} = environments
-const localPath = '/saved-search-sync-settings?a=b'
-
-const savedSearchSettingsPath = isProduction ? netsuite_path : localPath
+const {route_saved_search_sync_settings} = environments
 
 const Table = tableFactory<SavedSearchSyncSettings, 'edit'>([
     {
@@ -33,7 +30,7 @@ const Table = tableFactory<SavedSearchSyncSettings, 'edit'>([
       },
       cell: ({ row }) => (
         <div className="flex px-4 items-center">
-          <NextLink href={`${savedSearchSettingsPath}&view=management&id=${row.getValue('id')}`} passHref legacyBehavior>
+          <NextLink href={`${route_saved_search_sync_settings()}&id=${row.getValue('id')}`} passHref legacyBehavior>
             <Link
                 className="py-2 text-xs"
                 label={`Edit Saved Search Setting ${row.getValue('name')}`} 
@@ -44,7 +41,7 @@ const Table = tableFactory<SavedSearchSyncSettings, 'edit'>([
 
         <span className="mx-1">|</span>
 
-        <NextLink href={`${savedSearchSettingsPath}&view=management&id=${row.getValue('id')}&view-mode=true`} passHref legacyBehavior>
+        <NextLink href={`${route_saved_search_sync_settings(true)}&id=${row.getValue('id')}&view-mode=true`} passHref legacyBehavior>
             <Link
                 className=" py-2 text-xs"
                 label={`Edit Saved Search Setting ${row.getValue('name')}`} 
@@ -301,7 +298,7 @@ const SavedSearchSyncSettingsListPage: React.FC = () => {
     } = useSavedSearchSyncSettingsList(page)
 
     const addNew = () => {
-        route.push(`${savedSearchSettingsPath}&view=management`)
+        route.push(route_saved_search_sync_settings())
     }
 
     return (

@@ -1,5 +1,12 @@
+const _route_saved_search_sync_settings = process.env.NEXT_PUBLIC_ROUTE_SAVED_SEARCH_SYNC_SETTINGS ?? ''
+
 export const environments = {
-    netsuite_path: process.env.NEXT_PUBLIC_NETSUITE_PATH ?? '',
+    route_home: process.env.NEXT_PUBLIC_ROUTE_HOME ?? '',
+    route_saved_search_sync_settings(viewMode = false) {
+        const query = viewMode ? '&view-mode=true' : ''
+
+        return `${_route_saved_search_sync_settings}${query}`
+    },
     isProduction: process.env.NODE_ENV === 'production',
     api_employee: process.env.NEXT_PUBLIC_API_EMPLOYEE ?? '',
     api_saved_search_sync_settings: process.env.NEXT_PUBLIC_API_SAVED_SEARCH_SYNC_SETTINGS ?? '',

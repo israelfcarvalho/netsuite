@@ -1,18 +1,15 @@
 'use client'
 
-import { ComboboxOption, Form, Separator } from "@workspace/ui/components"
+import { ComboboxOption, Form, FormProps, Separator } from "@workspace/ui/components"
 import { MainSection, NotificationsSection, StorageSection } from "./sections"
 import { ScheduleSection } from "./sections/schedule"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useSavedSearchSyncSettings, useSaveSavedSearchSyncSettings } from "./saved-search-sync-settings.api"
 import { environments } from "@/environments"
 import { useAlert } from "@workspace/ui/hooks"
 
-const { netsuite_path, isProduction } = environments
-const localPath = '/'
-
-const savedSearchSettingsPath = isProduction ? netsuite_path : localPath
+const { route_home, route_saved_search_sync_settings } = environments
 
 export default function Page() {
   const { alert } = useAlert()
@@ -21,66 +18,67 @@ export default function Page() {
   const router = useRouter()
   const params = useSearchParams()
   const savedSearchSyncSettingsId = params.get('id')
+  const viewMode = params.get('view-mode') === "true"
   const { savedSearchSyncSettingsData } = useSavedSearchSyncSettings(savedSearchSyncSettingsId)
 
-    const [name, setName] = useState<string>("");
-    const [savedSearch, setSavedSearch] = useState<ComboboxOption>();
-    const [dateFilterField, setDateFilterField] = useState<string>()
-    const [period, setPeriod] = useState<ComboboxOption>();
-    const [periodDelay, setPeriodDelay] = useState("")
-    const [dateExecutionSettings, setDateExecutionSettings] = useState<ComboboxOption>()
+  const [name, setName] = useState<string>("");
+  const [savedSearch, setSavedSearch] = useState<ComboboxOption>();
+  const [dateFilterField, setDateFilterField] = useState<string>()
+  const [period, setPeriod] = useState<ComboboxOption>();
+  const [periodDelay, setPeriodDelay] = useState("")
+  const [dateExecutionSettings, setDateExecutionSettings] = useState<ComboboxOption>()
 
-    const [notificationSettings, setNotificationSettings] = useState<ComboboxOption>();
+  const [notificationSettings, setNotificationSettings] = useState<ComboboxOption>();
 
-    const [storageSettings, setStorageSettings] = useState<ComboboxOption>();
-    const [destinyFolderPath, setDestinyFolderPath] = useState<string>("");
-    const [createPeriodFolder, setCreatePeriodFolder] = useState(false)
-    const [fileNamePrefix, setFileNamePrefix] = useState<string>("");
-    const [appendExecutionDateToFileName, setAppendExecutionDateToFileName] = useState(false)
-    const [link, setLink] = useState<string>();
+  const [storageSettings, setStorageSettings] = useState<ComboboxOption>();
+  const [destinyFolderPath, setDestinyFolderPath] = useState<string>("");
+  const [createPeriodFolder, setCreatePeriodFolder] = useState(false)
+  const [fileNamePrefix, setFileNamePrefix] = useState<string>("");
+  const [appendExecutionDateToFileName, setAppendExecutionDateToFileName] = useState(false)
+  const [link, setLink] = useState<string>();
 
-    useEffect(() => {
-      setInitialData()
-    }, [savedSearchSyncSettingsData])
+  useEffect(() => {
+    setInitialData()
+  }, [savedSearchSyncSettingsData])
 
-    const setInitialData = () => {
-      if(savedSearchSyncSettingsData){
-          setName(savedSearchSyncSettingsData.name)
-          setSavedSearch({
-              id: savedSearchSyncSettingsData.savedSearch.id,
-              label: savedSearchSyncSettingsData.savedSearch.name,
-              value: savedSearchSyncSettingsData.savedSearch.name
-          })
+  const setInitialData = () => {
+    if(savedSearchSyncSettingsData){
+      setName(savedSearchSyncSettingsData.name)
+      setSavedSearch({
+          id: savedSearchSyncSettingsData.savedSearch.id,
+          label: savedSearchSyncSettingsData.savedSearch.name,
+          value: savedSearchSyncSettingsData.savedSearch.name
+      })
 
-          setDateFilterField(savedSearchSyncSettingsData.dateFilterField)
-          setPeriod({
-            id: savedSearchSyncSettingsData.period.id,
-            label: savedSearchSyncSettingsData.period.name,
-            value: savedSearchSyncSettingsData.period.name
-          })
-          setPeriodDelay(savedSearchSyncSettingsData.period.delayInDays)
-          setNotificationSettings({
-            id: savedSearchSyncSettingsData.notificationSettings.id,
-            label: savedSearchSyncSettingsData.notificationSettings.name,
-            value: savedSearchSyncSettingsData.notificationSettings.name
-          })
+      setDateFilterField(savedSearchSyncSettingsData.dateFilterField)
+      setPeriod({
+        id: savedSearchSyncSettingsData.period.id,
+        label: savedSearchSyncSettingsData.period.name,
+        value: savedSearchSyncSettingsData.period.name
+      })
+      setPeriodDelay(savedSearchSyncSettingsData.period.delayInDays)
+      setNotificationSettings({
+        id: savedSearchSyncSettingsData.notificationSettings.id,
+        label: savedSearchSyncSettingsData.notificationSettings.name,
+        value: savedSearchSyncSettingsData.notificationSettings.name
+      })
 
-          setStorageSettings({
-            id: savedSearchSyncSettingsData.storageSettings.id,
-            label: savedSearchSyncSettingsData.storageSettings.name,
-            value: savedSearchSyncSettingsData.storageSettings.name
-          })
-          setDestinyFolderPath(savedSearchSyncSettingsData.destinyFolderPath)
-          setCreatePeriodFolder(savedSearchSyncSettingsData.createPeriodFolder)
-          setFileNamePrefix(savedSearchSyncSettingsData.fileNamePrefix)
-          setAppendExecutionDateToFileName(savedSearchSyncSettingsData.appendExecutionDateToFileName)
-          setLink(savedSearchSyncSettingsData.scriptDeploymentLink)
-          savedSearchSyncSettingsData.dateExecutionSettings && setDateExecutionSettings({
-            id: savedSearchSyncSettingsData.dateExecutionSettings.id,
-            label: savedSearchSyncSettingsData.dateExecutionSettings.name,
-            value: savedSearchSyncSettingsData.dateExecutionSettings.name
-          })
-        }
+      setStorageSettings({
+        id: savedSearchSyncSettingsData.storageSettings.id,
+        label: savedSearchSyncSettingsData.storageSettings.name,
+        value: savedSearchSyncSettingsData.storageSettings.name
+      })
+      setDestinyFolderPath(savedSearchSyncSettingsData.destinyFolderPath)
+      setCreatePeriodFolder(savedSearchSyncSettingsData.createPeriodFolder)
+      setFileNamePrefix(savedSearchSyncSettingsData.fileNamePrefix)
+      setAppendExecutionDateToFileName(savedSearchSyncSettingsData.appendExecutionDateToFileName)
+      setLink(savedSearchSyncSettingsData.scriptDeploymentLink)
+      savedSearchSyncSettingsData.dateExecutionSettings && setDateExecutionSettings({
+        id: savedSearchSyncSettingsData.dateExecutionSettings.id,
+        label: savedSearchSyncSettingsData.dateExecutionSettings.name,
+        value: savedSearchSyncSettingsData.dateExecutionSettings.name
+      })
+    }
   }
 
   const handleSubmit = () => {
@@ -138,7 +136,7 @@ export default function Page() {
         dateExecutionSettings: dateExecutionSettings ? {id: dateExecutionSettings.id} : undefined
       }, {
         onSuccess(){
-          router.push(savedSearchSettingsPath)
+          router.push(route_home)
         },
         onError(err){
           alert({
@@ -152,17 +150,58 @@ export default function Page() {
   }
 
   const handleCancel = () => {
-    router.push(savedSearchSettingsPath)
+    router.push(route_home)
   }
+
+  const editActions = useMemo<FormProps['actions']>(() => {
+    const actions: FormProps['actions'] = [{
+      id: 'cancel',
+      label: 'Cancel',
+      onClick: handleCancel,
+      variant: 'outline'
+    }]
+
+    if(savedSearchSyncSettingsData){
+      actions.push({
+        id: 'reset',
+        label: 'Reset',
+        variant: 'ghost',
+        onClick: () => setInitialData(),
+        align: 'end'
+      })
+    }
+
+    return actions
+  }, [handleCancel, savedSearchSyncSettingsData])
+
+  const viewActions = useMemo<FormProps['actions']>(() => {
+    const actions: FormProps['actions'] = [{
+      id: 'back',
+      label: 'Back to List',
+      onClick: handleCancel,
+      variant: 'outline'
+    }]
+
+    if(savedSearchSyncSettingsData){
+      actions.push({
+        id: 'edit',
+        label: 'Edit',
+        onClick: () => router.replace(route_saved_search_sync_settings()),
+      })
+    }
+
+    return actions
+  }, [handleCancel])
+
+
 
   return (
     <div className="flex items-center justify-center w-dvw h-dvh">
         <Form
           title="SM | Saved Search Sync Settings"
           subtitle="All Transactions"
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          onReset={savedSearchSyncSettingsData ?  () => setInitialData() : undefined}
+          onSubmit={!viewMode ? handleSubmit : undefined}
+          actions={viewMode ? viewActions : editActions}
         >
           <MainSection 
             name={name}

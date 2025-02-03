@@ -15,17 +15,26 @@ export const Form: React.FC<FormProps> = ({
     title,
     subtitle,
     onSubmit,
-    onCancel,
-    onReset,
     submitLabel = 'Save',
     contentClassname,
-    logo
+    logo,
+    actions
 }) => {
     const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>((event) => {
         event.preventDefault()
         event.stopPropagation()
-        onSubmit(event)
+        onSubmit?.(event)
     }, [onSubmit])
+
+    const actionColumns = () => {
+        let count = actions?.length ?? 0
+
+        if(onSubmit){
+            count++
+        }
+
+        return Array.from({length: count}, (_, i) => (i+1) < count ? 'auto' : '1fr' ).join(' ')
+    }
 
     return (
         <FormPrimitive
@@ -43,26 +52,27 @@ export const Form: React.FC<FormProps> = ({
                     {!!subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
                 </div>
 
-                <div 
+                <div
                     className={cn(
                         !!title || !!subtitle ? 'mt-3' : '',
-                        'flex gap-4'
-                    )}>
-                    <Button type="submit">{submitLabel}</Button>
-
-                    {!!onCancel && (
-                        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+                        'grid gap-x-4 grid-rows-1'
                     )}
+                    style={{gridTemplateColumns: actionColumns()}}
+                >
+                    {!!onSubmit && (<Button className="w-fit" type="submit">{submitLabel}</Button>)}
 
-                    {!!onReset && (
-                        <Button 
-                            className="ml-auto" 
-                            variant="ghost" 
-                            onClick={onReset}
+                    {actions?.map(action => (
+                        <Button
+                            className={cn('w-fit',{
+                                'justify-self-end': action.align === 'end'
+                            })}
+                            key={action.id} 
+                            variant={action.variant} 
+                            onClick={action.onClick}
                         >
-                            Reset
+                            {action.label}
                         </Button>
-                    )}
+                    ))}
                 </div>
                 {!!logo && (
                     <div className="justify-self-end h-14 row-span-2">{logo}</div>

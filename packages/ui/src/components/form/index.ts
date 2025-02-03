@@ -7,5 +7,5 @@ export * from './select'
 
 //form itself
 export { Form } from './form'
-export type { FormFieldOption } from './form.types'
+export type { FormFieldOption, FormProps } from './form.types'
 export * from './sheet' //variant of form as a sheet
