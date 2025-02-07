@@ -25,7 +25,7 @@ const Textarea = React.forwardRef<
       <FormControl asChild>
         <textarea
           className={cn(
-            "flex min-h-[100px] border-input-border border rounded-md w-full text-sm p-2 outline-input-border-selected",
+            "flex min-h-[100px] border-input-border border border-solid rounded-md w-full text-sm p-2 outline-input-border-selected",
             className
           )}
           ref={ref}
