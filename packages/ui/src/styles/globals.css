@@ -61,7 +61,8 @@
   * {
     @apply border-border;
     pointer-events: all !important;
-    border: none
+    border: none;
+    border-width: 0;
   }
 
   body {
