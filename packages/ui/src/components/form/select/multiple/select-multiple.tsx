@@ -192,7 +192,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             onClick={handleTogglePopover}
             className={cn(
               "border-light-neutral-100 bg-light-neutral hover:bg-current",
-              "h-fit w-full p-1 rounded-md border [&_svg]:pointer-events-auto min-h-8",
+              "h-fit w-full p-1 rounded-md border border-solid [&_svg]:pointer-events-auto min-h-8",
             )}
           >
             {selectedValues.length > 0 ? (
@@ -290,7 +290,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   >
                     <div
                       className={cn(
-                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border-solid border border-primary",
                         selectedValues.length === options.length
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible"
@@ -325,7 +325,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                             >
                               <div
                                 className={cn(
-                                  "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                                  "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border-solid border border-primary",
                                   isSelected
                                     ? "bg-light-brand-120 text-primary-foreground"
                                     : "opacity-50 [&_svg]:invisible"
