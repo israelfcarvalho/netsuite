@@ -1,15 +1,10 @@
 import { Router } from 'express'
+import data from '../saved-search/settings/data.json' with {type: 'json'}
 
 const employee = Router()
 
-const employess = Array.from(
-    {length: 2000}, (_, i) => ({
-        id: `${i}`, name: `Employer ${i}`
-    })
-)
-
 employee.get('/', (req, res) => {
-    res.json(employess)
+    res.json(data)
 })
 
 export {
