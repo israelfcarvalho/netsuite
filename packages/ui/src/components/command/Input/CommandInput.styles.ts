@@ -1,7 +1,7 @@
 import { cn, tv } from "@workspace/ui/lib/utils"
 
 //netsuite className
-const className = 'border-input-border border min-h-8'
+const className = 'border-input-border border-solid border min-h-8'
 
 const inputStyleVariant = tv({
     base: cn(
