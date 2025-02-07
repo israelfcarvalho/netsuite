@@ -3,12 +3,19 @@
 import React, { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
 import { FormControl, FormField, FormLabel } from '@radix-ui/react-form'
-import { FixedSizeList as List } from 'react-window'
 
 import { cn, searchEngine } from '@workspace/ui/lib/utils'
 import { ComboboxFactoryInterface } from './combobox.types'
 import { CommandInput } from '../../command'
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '../../command/command'
+import { useVirtualList, VirtualList, VirtualSizeProvider } from '@workspace/ui/components'
+
+const   ITEM_PADDING_X = 8, 
+        ITEM_GAP = 4,
+        ICON_CHECK_SIZE = 16,
+        ITEM_PADDING_Y = 4,
+        ITEM_BORDER_TOP = 1
+
 
 export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     options: incomingOptions, 
@@ -20,6 +27,21 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     disabled,
     viewMode
 }) => {
+    const optionsWithUniqueId = useMemo(() => {
+        const ids = new Set<string>()
+        
+        return incomingOptions.filter(option => {
+            if(ids.has(option.id)){
+                return false
+            }
+
+            ids.add(option.id)
+
+            return true
+        })
+    }, [incomingOptions])
+
+
     const [optionSelectedCache, setOptionSelectedCache] = useState<typeof optionSelected>()
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState('')
@@ -27,17 +49,31 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
     const formFieldRef = useRef<React.ElementRef<typeof FormField>>(null)
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const options = useMemo<typeof incomingOptions>(() => {
+    const options = useMemo<typeof optionsWithUniqueId>(() => {
       if(search){
-        const optionsProspect = searchEngine(incomingOptions, ['label'], search)
+        const optionsProspect = searchEngine(optionsWithUniqueId, ['label'], search)
 
         return optionsProspect
       }
     
-      const blankOption = {id: `${label}-${name}-blank`, label: 'blank', value: 'blank'} as (typeof incomingOptions)[0] 
+      const blankOption = {id: `${label}-${name}-blank`, label: 'blank', value: 'blank'} as (typeof optionsWithUniqueId)[0] 
     
-      return [blankOption, ...incomingOptions]
-    }, [incomingOptions, search, required])
+      return [blankOption, ...optionsWithUniqueId]
+    }, [optionsWithUniqueId, search, required])
+
+    const allListItems = useMemo(() => {
+        return optionsWithUniqueId.map((option, index) => ({
+            id: option.id,
+            content: option.label
+        }))
+    }, [optionsWithUniqueId])
+
+    const currentListItems = useMemo(() => {
+        return options.map((option, index) => ({
+            id: option.id,
+            content: option.label
+        }))
+    }, [options])
 
     useEffect(() => {
         if(optionSelected){
@@ -85,7 +121,10 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
         setOpen(false)
     }
 
+    const showChevronDown = !open && !viewMode
+
     return (
+        <VirtualSizeProvider>
         <Command shouldFilter={false} className='relative h-auto overflow-visible bg-inherit'>
             <FormField ref={formFieldRef} name={name}>
                 <FormLabel
@@ -103,7 +142,7 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                             ref={inputRef}
                             className={cn(
                                 'bg-light-neutral border-solid border border-input-border',
-                                {'disabled:cursor-default border-0 px-0 rounded-none bg-transparent': viewMode}
+                                {'disabled:cursor-default border-0 px-0 rounded-none bg-transparent': viewMode},
                             )}
                             role='combobox'
                             aria-expanded={open} 
@@ -115,75 +154,93 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                         />
                     </FormControl>
 
-                    {!open && !viewMode && (
+                    {showChevronDown && (
                         <ChevronDown 
                             role='button' 
                             aria-label={`open ${label}`} 
                             onClick={() => inputRef.current?.focus()} 
-                            className='absolute size-6 pr-2 top-1 right-0 cursor-pointer'
+                            className='bg-light-neutral absolute size-6 pr-2 top-1 right-[1px] cursor-pointer'
                         />
                     )}
                 </div>
             </FormField>
-                <CommandList 
-                    className={cn(
-                        '!absolute max-h-56 mt-px w-full z-10 shadow-[0px_10px_20px_0px] shadow-light-neutral-60 rounded-b-md',
-                        !open && 'hidden'
-                    )}
-                    style={{top: formFieldRef.current?.offsetHeight}}
-                >
-                    <CommandEmpty>
-                        {!!options.length ? 'No results Found' : 'No options available'}
-                    </CommandEmpty>
-                    <CommandGroup>
-                        <List
-                            height={options.length > 6 ? 192 : options.length * 32}
-                            itemCount={options.length}
-                            itemSize={32}
-                            width='100%'
-                        >
-                            {({style, index}) => {
-                                const option = options[index]
-                                if(!option) return null
+            <CommandList 
+                className={cn(
+                    '!absolute max-h-56 overflow-hidden mt-px w-full z-10 shadow-[0px_10px_20px_0px] shadow-light-neutral-60 rounded-b-md',
+                    !open && 'hidden'
+                )}
+                style={{top: formFieldRef.current?.offsetHeight}}
+            >
+                <CommandEmpty>
+                    {!!options.length ? 'No results Found' : 'No options available'}
+                </CommandEmpty>
+                <CommandGroup>
+                    <VirtualList 
+                        anchorRef={inputRef} 
+                        allItems={allListItems} 
+                        currentItems={currentListItems}
+                        filledSpace={useMemo(() => ({width: ICON_CHECK_SIZE + ITEM_PADDING_X * 2 + ITEM_GAP}), [])}
+                        extraSpace={useMemo(() => ({height: ITEM_PADDING_Y * 2 + ITEM_BORDER_TOP}), [])}
+                    >
+                        {({style, index}) => {
+                            const { loading } = useVirtualList()
 
-                                if(option.value === 'blank'){
-                                    return (
-                                    <CommandItem
-                                        className={cn(
-                                            'flex justify-between h-8',
-                                        )}
-                                        key='blank' 
-                                        value='blank' 
-                                        onSelect={() => handleSelect(undefined)}
-                                    />
-                                    )
-                                }
-                                    
+                            const option = options[index]
+                            if(!option) return null
+                            if(option.value === 'blank'){
                                 return (
-                                    <CommandItem
-                                        className={cn(
-                                            'flex justify-between py-0 flex-nowrap',
-                                        )}
-                                        key={option.id} 
-                                        value={option.value} 
-                                        onSelect={() => handleSelect(option)}
-                                        style={{...style}}
-                                    >
-                                        <span title={option.label} className='w-full h-full items-center whitespace-nowrap overflow-hidden text-ellipsis'>
-                                            {option.label}
-                                        </span>
-                                        <Check
-                                            className={cn(
-                                                "size 4",
-                                                value === option.value ? "opacity-100" : "opacity-0"
-                                            )}
-                                        />
-                                    </CommandItem>
+                                <CommandItem
+                                    className={cn(
+                                        'flex justify-between h-8',
+                                    )}
+                                    key='blank' 
+                                    value='blank' 
+                                    onSelect={() => handleSelect(undefined)}
+                                />
                                 )
-                            }}
-                        </List>
-                    </CommandGroup>
-                </CommandList>
+                            }
+                                
+                            return (
+                                <CommandItem
+                                    className={cn(
+                                        'flex justify-between flex-nowrap border-solid border-light-neutral-30',
+                                    )}
+                                    key={option.id}
+                                    data-key={option.id}
+                                    value={option.value} 
+                                    onSelect={() => handleSelect(option)}
+                                    style={{
+                                        ...style, 
+                                        paddingLeft: ITEM_PADDING_X, 
+                                        paddingRight: ITEM_PADDING_X,
+                                        columnGap: ITEM_GAP,
+                                        paddingBottom: ITEM_PADDING_Y,
+                                        paddingTop: ITEM_PADDING_Y,
+                                        borderTopWidth: ITEM_BORDER_TOP
+                                    }}
+                                >
+                                    <span 
+                                        className={cn(
+                                        {
+                                        'w-full break-normal whitespace-nowrap overflow-hidden text-ellipsis': loading
+                                        })}
+                                        style={{wordBreak: !loading ? 'break-word' : undefined}}
+                                    >
+                                        {option.label}
+                                    </span>
+                                    <Check
+                                        className={cn(
+                                            value === option.value ? "opacity-100" : "opacity-0"
+                                        )}
+                                        style={{width: ICON_CHECK_SIZE, height: ICON_CHECK_SIZE}}
+                                    />
+                                </CommandItem>
+                            )
+                        }}
+                    </VirtualList>
+                </CommandGroup>
+            </CommandList>
         </Command>
+        </VirtualSizeProvider>
     ) 
 }
