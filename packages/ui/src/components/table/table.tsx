@@ -112,7 +112,7 @@ export const tableFactory: TableFactoryInterface = (columns, columnPinning = {le
 
   return (
       <div className="w-full">
-        <div ref={tableContainerRef} className="w-full">
+        <div ref={tableContainerRef} className="w-full overflow-hidden rounded-sm shadow-[0_0_4px_2px] shadow-light-neutral-50">
           <TablePrimitives.Table className="w-full">
             <TablePrimitives.TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -125,7 +125,7 @@ export const tableFactory: TableFactoryInterface = (columns, columnPinning = {le
                         <TablePrimitives.TableHead
                             key={header.id}
                             style={getCommonPinningStyles(header.column, isOverflowed)}
-                            className="bg-light-neutral-10"
+                            className="bg-light-neutral-30"
                         >
                           {header.isPlaceholder
                             ? null
