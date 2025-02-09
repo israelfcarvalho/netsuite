@@ -186,7 +186,9 @@ export default function Page() {
       actions.push({
         id: 'edit',
         label: 'Edit',
-        onClick: () => router.replace(route_saved_search_sync_settings()),
+        onClick: () => router.replace(
+          `${route_saved_search_sync_settings()}&id=${savedSearchSyncSettingsId}`
+        ),
       })
     }
 
