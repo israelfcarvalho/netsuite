@@ -80,8 +80,6 @@ export const VirtualList: React.FC<VirtualListProps> = ({
         return itemSize ? itemSize : minItemHeight
     }
 
-    console.log({itemsSize: itemsSize.size, loading, __: !itemsSize.size && loading, tt: `loading-list-${currentItems.length}`, content})
-
     return (
         <VirtualListProvider loading={!itemsSize.size && loading}>
             {content === 'list' && (
@@ -268,9 +266,9 @@ export const VirtualSizeProvider: React.FC<PropsWithChildren> = ({children}) => 
                         {itemsMeasuring.map(item => (
                             <div
                                 className="w-full text-sm"
-                                ref={ref => 
+                                ref={ref => {
                                     ref && setChildrenRef(item.id, ref)
-                                } 
+                                }} 
                                 key={item.id} 
                                 data-id={item.id}
                                 style={{wordBreak: 'break-word', paddingTop: extraSpace?.height}}
