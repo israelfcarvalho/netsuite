@@ -6,11 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Button, Form, Link, tableFactory } from "@workspace/ui/components";
 import { useSavedSearchSyncSettingsList } from "./new-vendor-form-rev/new-vendor-form-rev.api";
-import { environments } from "@/environments";
 import { SavedSearchSyncSettings } from "./new-vendor-form-rev/new-vendor-form-rev-type";
-
-const {isProduction} = environments
-const localPath = '/saved-search-sync-settings?a=b'
 
 const savedSearchSettingsPath = ''
 
