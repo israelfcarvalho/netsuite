@@ -22,6 +22,9 @@ import {
     CommandGroup,
     CommandItem,
     FormFieldOption,
+    VirtualSizeProvider,
+    VirtualList,
+    useVirtualList,
 } from "@workspace/ui/components";
 import { cn, searchEngine } from "@workspace/ui/lib/utils";
 
@@ -90,6 +93,20 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       required,
       selectedOptions
 }) => {
+    const optionsWithUniqueId = useMemo(() => {
+        const ids = new Set<string>()
+        
+        return incomingOptions.filter(option => {
+            if(ids.has(option.id)){
+                return false
+            }
+
+            ids.add(option.id)
+
+            return true
+        })
+    }, [incomingOptions])
+
     const triggerRef = useRef<HTMLButtonElement>(null)
     const [selectedValues, setSelectedValues] = useState<MultiSelectOption[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -97,12 +114,19 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     
     const options = useMemo<MultiSelectOption[]>(() => {
       if(search){
-        const optionsProspect = searchEngine(incomingOptions, ['label'], search)
+        const optionsProspect = searchEngine(optionsWithUniqueId, ['label'], search)
         return optionsProspect
       }
     
-      return incomingOptions
-    }, [incomingOptions, search])
+      return optionsWithUniqueId
+    }, [optionsWithUniqueId, search])
+
+    const allListItems = useMemo(() => {
+      return optionsWithUniqueId.map(option => ({
+        id: option.id,
+        content: option.label
+      }))
+    }, [optionsWithUniqueId])
 
     const optionsWithSelectedFirst = useMemo(() => {
       const {selected, nonSelected} = options.reduce((result, option) => {
@@ -119,6 +143,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       
       return [...selected, ...nonSelected]
     }, [options, selectedOptions])
+
+    const currentItems = useMemo(() => {
+      return optionsWithSelectedFirst.map(option => ({
+        id: option.id,
+        content: option.label
+      }))
+    }, [optionsWithSelectedFirst])
 
     useEffect(() => {
       if(selectedOptions !== selectedValues) {
@@ -196,8 +227,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             )}
           >
             {selectedValues.length > 0 ? (
-              <div className="flex justify-between items-stretch w-full">
-                <div className="flex flex-wrap gap-1 items-center">
+              <div className="flex justify-between items-stretch w-full overflow-hidden">
+                <div className="flex-[0_1_fit-content] overflow-auto flex flex-wrap gap-1 items-center">
                   {selectedValues.slice(0, maxCount).map((option) => {
                     const IconComponent = option?.icon;
                     return (
@@ -236,9 +267,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                     </Badge>
                   )}
                 </div>
-                <div className="h-auto flex items-center">
+                <div className="shadow-[-1px_0_8px_0px] shadow-light-neutral-50 flex items-center">
                   <XIcon
-                    className="h-4 cursor-pointer text-muted-foreground"
+                    className="h-4 cursor-pointer text-light-danger-120"
                     onClick={(event) => {
                       event.stopPropagation();
                       handleClear();
@@ -270,6 +301,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
           style={{width: triggerRef.current?.offsetWidth}}
         >
+          <VirtualSizeProvider>
           <Command shouldFilter={false}>
             <CommandInput
               autoFocus
@@ -286,7 +318,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   <CommandItem
                     key="all"
                     onSelect={toggleAll}
-                    className="cursor-pointer sticky top-0"
+                    className="pl-1 cursor-pointer sticky top-0"
                   >
                     <div
                       className={cn(
@@ -302,13 +334,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   </CommandItem>
                 )}
                     <CommandGroup>
-                      <List
-                        height={options.length > 6 ? 192 : options.length * 32}
-                        itemCount={options.length}
-                        itemSize={32}
-                        width='100%'
+                      <VirtualList
+                        anchorRef={triggerRef}
+                        allItems={allListItems}
+                        currentItems={currentItems}
+                        filledSpace={{width: 28}}
+                        extraSpace={{height: 8}}
                       >
                         {({style, index}) => {
+                          const { loading } = useVirtualList()
+
                           const option = optionsWithSelectedFirst[index]
                           if(!option) return null
 
@@ -320,7 +355,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                             <CommandItem
                               key={option.id}
                               onSelect={() => toggleOption(option)}
-                              className="cursor-pointer bg-light-neutral rounded-none !hover:bg-light-neutral"
+                              className="pl-1 cursor-pointer bg-light-neutral rounded-none !hover:bg-light-neutral border-solid border-light-neutral-40 border-t"
                               style={{...style}}
                             >
                               <div
@@ -336,14 +371,22 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                               {option.icon && (
                                 <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                               )}
-                              <span>{option.label}</span>
+                              <span
+                                className={cn({
+                                    'w-full py-1 break-normal whitespace-nowrap overflow-hidden text-ellipsis': loading
+                                })}
+                                style={{wordBreak: !loading ? 'break-word' : undefined}}
+                              >
+                                {option.label}
+                              </span>
                             </CommandItem>
                           )
                         }}
-                      </List>
+                      </VirtualList>
                     </CommandGroup>
             </CommandList>
           </Command>
+          </VirtualSizeProvider>
         </PopoverContent>
       </Popover>
     );
