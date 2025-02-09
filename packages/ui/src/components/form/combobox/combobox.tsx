@@ -220,9 +220,8 @@ export const ComboboxFactory: ComboboxFactoryInterface = () => ({
                                     }}
                                 >
                                     <span 
-                                        className={cn(
-                                        {
-                                        'w-full break-normal whitespace-nowrap overflow-hidden text-ellipsis': loading
+                                        className={cn({
+                                            'w-full break-normal whitespace-nowrap overflow-hidden text-ellipsis': loading
                                         })}
                                         style={{wordBreak: !loading ? 'break-word' : undefined}}
                                     >
