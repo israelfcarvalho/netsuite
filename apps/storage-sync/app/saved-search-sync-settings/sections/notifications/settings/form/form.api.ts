@@ -68,7 +68,7 @@ export const useNotificationSettings = (id?: string) => {
 
 async function saveNotificationSettings(body: SaveNotificationSettingsBody){
     return api.post<GetNotificationSettingsByIdResponse>(
-        environments.api_storage_settings, 
+        environments.api_notification_settings, 
         body
     )
 }
