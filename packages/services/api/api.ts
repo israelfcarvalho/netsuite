@@ -65,10 +65,8 @@ export class Api implements Api {
         return [path, paramsArray.join('&')].join('?')
     }
 
-    private errorMiddleware<TData extends unknown>(res: TData | RawNetsuiteError){
-        if(res && typeof res === 'object' && 'error' in res ){
-            throw new NetSuiteError(res)
-        }
+    private errorMiddleware(res: any){
+        throw new NetSuiteError(res)
 
         return res
     }
