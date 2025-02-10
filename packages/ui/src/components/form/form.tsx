@@ -69,6 +69,7 @@ export const Form: React.FC<FormProps> = ({
                             key={action.id} 
                             variant={action.variant} 
                             onClick={action.onClick}
+                            disabled={action.disabled}
                         >
                             {action.label}
                         </Button>
@@ -79,12 +80,11 @@ export const Form: React.FC<FormProps> = ({
                 )}
             </div>
             
-            <ScrollableArea 
-                className={cn('flex-1')}
-                classNameViewport={cn("px-6 pt-4 pb-8", headerAndContentSyncSpaceClassName, contentClassname)}
+            <div 
+                className={cn('flex-1 overflow-auto', "px-6 pt-4 pb-8 bg-light-neutral-10", headerAndContentSyncSpaceClassName, contentClassname)}
             >
                 {children}
-            </ScrollableArea>
+            </div>
         </FormPrimitive>
     )
 }

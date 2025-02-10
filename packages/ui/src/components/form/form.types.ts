@@ -9,6 +9,7 @@ interface FormAction {
     onClick: VoidFunction
     variant?: ButtonProps['variant']
     align?: ActionAlign
+    disabled?: boolean
 }
 
 export interface FormProps {
