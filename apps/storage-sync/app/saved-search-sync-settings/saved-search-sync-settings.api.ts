@@ -65,7 +65,7 @@ async function saveSavedSearchSyncSettings(body: SaveSavedSearchSyncSettingsBody
 }
 
 export const useSaveSavedSearchSyncSettings = () => {
-    const { mutate } = useMutation<ResponseGetSavedSearchSyncSettingsById, NetSuiteError, SaveSavedSearchSyncSettingsBody, unknown>({
+    const { mutate } = useMutation<ResponseGetSavedSearchSyncSettingsById, NetSuiteError, SaveSavedSearchSyncSettingsBody>({
         mutationFn: saveSavedSearchSyncSettings,
         mutationKey: ['save-saved-search-syn-settings'],
     })
