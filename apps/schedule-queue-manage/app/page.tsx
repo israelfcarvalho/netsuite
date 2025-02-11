@@ -89,15 +89,15 @@ const ScheduleQueueManagePage: React.FC = () => {
                   'text-base text-light-neutral-190/80 font-sans',
                   'grid grid-rows-[auto_1fr] gap-y-5 gap-x-8',
                   'shadow-[0_0_4px_0px] shadow-light-brand-120',
-                  {'shadow-green-700': runState?.status === 'success'},
+                  {'shadow-light-success-120': runState?.status === 'success'},
                   {'shadow-light-danger-120': runState?.status === 'error'},
                   {'hidden': !data}
                 )}
               >
-                <h2 className="font-bold">
+                {/* <h2 className="font-bold">
                   Execution log:
                 </h2>
-                
+                 */}
                 <div className="flex flex-col justify-center items-center text-center text-lg text-light-neutral-100">
                   {!runState ? (
                   <Fragment>
@@ -120,8 +120,8 @@ const ScheduleQueueManagePage: React.FC = () => {
                     <Fragment>
                       <h3 
                         className={cn(
-                          'self-stretch capitalize',
-                          {'text-green-700': runState.status === 'success'},
+                          'self-stretch capitalize font-semibold',
+                          {'text-light-success-120': runState.status === 'success'},
                           {'text-light-danger-120': runState.status === 'error'}
                         )}
                       >
