@@ -4,6 +4,7 @@ export * from './field'
 export * from './checkbox'
 export * from './textarea'
 export * from './select'
+export * from './new'
 
 //form itself
 export { Form } from './form'

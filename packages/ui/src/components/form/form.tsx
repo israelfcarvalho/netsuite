@@ -6,7 +6,6 @@ import { Form as FormPrimitive } from '@radix-ui/react-form'
 import { FormProps } from "./form.types";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "../button/button";
-import { ScrollableArea } from "../scrollable-area";
 
 const headerAndContentSyncSpaceClassName = '@2xl:px-10 px-4'
 
